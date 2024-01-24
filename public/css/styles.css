@@ -172,6 +172,7 @@ nav ul {
 
 nav li {
   flex-grow: 1;
+  list-style-type: none; /* suppress bullet points */
 }
 
 nav li a {
@@ -351,4 +352,67 @@ button.own-today {
     gap: 20px;
     margin: 0;
   }
+}
+
+/* Styles for the vehicle list */
+#inv-display {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  list-style: none;
+  padding: 0;
+}
+
+#inv-display li {
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+
+#inv-display li img {
+  width: 100%;
+  height: auto;
+}
+
+/* Styles for the vehicle details */
+.namePrice {
+  text-align: center;
+}
+
+.namePrice hr {
+  margin: 10px 0;
+}
+
+.namePrice h2 {
+  margin: 0;
+  font-size: 1.2em;
+}
+
+.namePrice span {
+  font-size: 1em;
+  color: #333;
+}
+
+/* Styles for the notice message */
+.notice {
+  color: red;
+  font-weight: bold;
+}
+
+/* Responsive styles for mobile screens */
+@media (max-width: 600px) {
+  #inv-display {
+    grid-template-columns: 1fr;
+  }
+
+  .namePrice h2 {
+    font-size: 1em;
+  }
+
+  .namePrice span {
+    font-size: 0.8em;
+  }
+}
+
+li::marker {
+  color: red;
 }
