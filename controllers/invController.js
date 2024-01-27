@@ -34,4 +34,13 @@ invCont.getVehicleById = async function (req, res, next) {
   });
 };
 
+invCont.triggerError = (req, res, next) => {
+  try {
+    let err = new Error("Intentional error triggered");
+    err.status = 500;
+    throw err;
+  } catch (err) {
+    next(err);
+  }
+};
 module.exports = invCont;
