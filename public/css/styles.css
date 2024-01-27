@@ -63,14 +63,14 @@ li {
 }
 
 a {
-  color: #007bff; /* blue */
+  color: #0000ff; /* blue */
   text-decoration: none;
   background-color: transparent;
   padding: 0 5px;
 }
 
 a:hover {
-  color: #0056b3; /* slightly darker blue */
+  color: #000080; /* slightly darker blue */
   text-decoration: underline;
 }
 
