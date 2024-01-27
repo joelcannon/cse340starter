@@ -416,3 +416,92 @@ button.own-today {
 li::marker {
   color: red;
 }
+
+/* body {
+  font-family: Arial, sans-serif;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+} */
+/* 
+.car-details {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+
+.car-details img {
+  width: 100%;
+  height: auto;
+}
+
+.car-info {
+  flex-grow: 0;
+  padding: 20px;
+}
+
+.price,
+.miles {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+@media (min-width: 601px) {
+  .car-details img,
+  .car-info {
+    flex: 0 0 50%;
+  }
+}
+
+@media (max-width: 600px) {
+  .car-details {
+    flex-direction: column;
+  }
+} */
+.car-details {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+
+.car-details img {
+  width: 50%;
+  height: 50%;
+  max-width: 100%; /* Add this line to ensure the image doesn't exceed its container width */
+  object-fit: cover; /* Maintain aspect ratio */
+}
+
+.car-info {
+  flex-grow: 0;
+  padding: 20px;
+}
+
+.price,
+.miles {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+@media (min-width: 601px) {
+  .car-details img,
+  .car-info {
+    flex: 0 0 50%;
+  }
+  .car-info {
+    padding: 0 20px;
+  }
+}
+
+@media (max-width: 600px) {
+  .car-details {
+    flex-direction: column;
+  }
+
+  .car-details img {
+    width: 100%;
+    height: 100%;
+    max-width: none; /* Reset the max-width for smaller screens */
+  }
+}
