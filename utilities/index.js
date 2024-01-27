@@ -61,7 +61,7 @@ Util.buildCarDetail = async function (data) {
     <div class="car-details">
       <img src="${data.inv_image}" alt="${data.inv_make} ${data.inv_model}">
       <div class="car-info">
-        <h2>${data.inv_make} ${data.inv_model} - ${data.inv_year}</h2>
+        <h4>${data.inv_make} ${data.inv_model} - ${data.inv_year} Details</h4>
         <p class="price">Price: $${new Intl.NumberFormat("en-US").format(
           data.inv_price
         )}</p>
@@ -69,6 +69,7 @@ Util.buildCarDetail = async function (data) {
           data.inv_miles
         )}</p>
         <p class="description">${data.inv_description}</p>
+        <p class="color">Color: ${data.inv_color}</p>
       </div>
     </div>`;
   return content;

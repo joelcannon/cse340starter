@@ -443,7 +443,8 @@ li::marker {
 }
 
 .price,
-.miles {
+.miles,
+.color {
   font-size: 1.2em;
   font-weight: bold;
 }
@@ -479,7 +480,8 @@ li::marker {
 }
 
 .price,
-.miles {
+.miles,
+.color {
   font-size: 1.2em;
   font-weight: bold;
 }
