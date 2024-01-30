@@ -507,3 +507,33 @@ li::marker {
     max-width: none; /* Reset the max-width for smaller screens */
   }
 }
+
+.login {
+  width: 300px;
+  padding: 16px;
+  background-color: white;
+  margin: 0 auto;
+  margin-top: 50px;
+  border: 1px solid black;
+  border-radius: 4px;
+}
+.login input[type="email"],
+.login input[type="password"] {
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 10px 0;
+  border: none;
+  background: #f1f1f1;
+}
+.login input[type="submit"] {
+  background-color: #4caf50;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+}
+.login a {
+  color: dodgerblue;
+}
