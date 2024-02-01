@@ -5,19 +5,27 @@
      res.redirect('/')
    } %>
 
-   <% messages() %>
+   <%- messages() %>
+   <%= 'Test message' %>
 
-   <div class="login">
-    <form action="/login" method="POST"> 
-
-    <label for="account_email"><b>Email</b></label>
-    <input type="email" placeholder="Enter Email" name="account_email" required>
-
-    <label for="account_password"><b>Password</b></label>
-    <input type="password" placeholder="Enter Password" name="account_password" required>
-
-    <button type="submit">Login</button>
-
-    <span class="register">Don't have an account? <a href="/register">Register</a></span>
-    </form>
-    </div>
+<div class="login">
+  <form id="loginForm" action="/account/login" method="post">
+    <fieldset>
+      <p>
+          <label for="account_email">Email*:</label>
+          <input type="text" name="account_email" placeholder="Enter Email" required>
+      </p>
+      <div>
+        <label for="account_password">Password*:</label>
+        <div  class="input-wrapper">
+          <input type="password" name="account_password" id="password" placeholder="Enter Password" required>
+          <i class="fas fa-eye" id="togglePassword"></i>
+        </div>
+      </div>
+      <p class="requirements">* required</p>
+      <button type="submit" id="submit">Log In</button>
+  </fieldset>
+</form>
+  <span class="register">Don't have an account? <a href="/account/register">Register</a></span>
+</div>
+<script src="/js/script.js"></script>
