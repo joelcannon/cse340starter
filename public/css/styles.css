@@ -621,3 +621,20 @@ input {
 .login span {
   display: block;
 }
+
+input:required:invalid,
+input:focus:invalid {
+  /* Change border color to red when input is invalid */
+  border-color: red;
+
+  /* Add a red box shadow when input is invalid */
+  box-shadow: 0 0 5px red;
+}
+
+input:required:valid {
+  /* Change border color to green when input is valid */
+  border-color: green;
+
+  /* Add a green box shadow when input is valid */
+  box-shadow: 0 0 5px green;
+}
