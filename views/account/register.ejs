@@ -7,20 +7,28 @@
 
    <%- messages() %>
 
+   <% if (errors) { %>
+    <ul class="notice">
+   <% errors.array().forEach(error => { %>
+     <li><%= error.msg %></li>
+  <%  }) %>
+   </ul>
+  <% } %>
+  
 <div class="login">
     <form id="registerForm" action="/account/register" method="post">
         <fieldset>
             <p>
             <label for="account_firstname"><b>First Name*:</b></label>
-            <input type="text" placeholder="Enter first name" name="account_firstname" required>
+            <input type="text" name="account_firstname" id="accountFirstname" required value="<%= locals.account_firstname %>">
         </p>
         <p>
             <label for="account_lastname"><b>Last Name*:</b></label>
-            <input type="text" placeholder="Enter last name" name="account_lastname" required>
+            <input type="text" placeholder="Enter last name" name="account_lastname" required value="<%= locals.account_lastname %>">
         </p>
         <p>
             <label for="account_email">Email*:</label>
-            <input type="email" name="account_email" placeholder="Enter Email" required>
+            <input type="email" name="account_email" placeholder="Enter Email" required value="<%= locals.account_email %>">
         </p>
         <div>
           <label for="account_password">Password**:</label>
