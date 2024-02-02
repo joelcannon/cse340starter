@@ -575,6 +575,7 @@ label {
 }
 
 input[type="text"],
+input[type="email"],
 input[type="password"] {
   padding: 10px;
   margin-bottom: 20px;
@@ -585,7 +586,7 @@ input[type="password"] {
 label,
 input {
   display: block;
-  margin-bottom: 10px;
+  /* margin-bottom: 10px; */
   width: 100%;
   box-sizing: border-box;
 }
