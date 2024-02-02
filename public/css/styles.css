@@ -623,7 +623,7 @@ input {
   display: block;
 }
 
-input:required:invalid,
+/* input:required:invalid, */
 input:focus:invalid {
   /* Change border color to red when input is invalid */
   border-color: red;
@@ -632,10 +632,33 @@ input:focus:invalid {
   box-shadow: 0 0 5px red;
 }
 
+input:-moz-focusring {
+  /* Change border color to green when input is valid */
+  border-color: green;
+
+  /* Add a green box shadow when input is valid */
+  box-shadow: 0 0 5px green;
+}
+
 input:required:valid {
   /* Change border color to green when input is valid */
   border-color: green;
 
   /* Add a green box shadow when input is valid */
   box-shadow: 0 0 5px green;
+}
+
+/* Hide the valid icon by default */
+.fas.fa-check-circle.valid-icon {
+  display: none;
+  color: green;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Show the valid icon when the input is valid */
+input:required:valid + .valid-icon {
+  display: inline;
 }

@@ -19,7 +19,10 @@
     <fieldset>
       <p>
           <label for="account_email">Email*:</label>
-          <input type="email" name="account_email" placeholder="Enter Email" required value="<%= locals.account_email %>">
+          <div class="input-wrapper">
+            <input type="email" name="account_email" placeholder="Enter Email" required value="<%= locals.account_email %>">
+          <i class="fas fa-check-circle valid-icon"></i>
+          </div>
       </p>
       <div>
         <label for="account_password">Password**:</label>
