@@ -22,9 +22,11 @@
       <p>
         <label for="classification_id"><b>Classification*:</b></label>
         <div class="input-wrapper">
-            <select name="classification_id" id="classification_id" required>
+            <!-- <select name="classification_id" id="classification_id" required>
                 <option value="1">SUV</option>
-                <!-- Add more options as needed -->
+            </select> -->
+            <select name="classification_id" id="classification_id" required>
+              <%- classificationOptions %>
             </select>
             <i class="fas fa-check-circle valid-icon"></i>
         </div>
@@ -63,7 +65,7 @@
 <p>
   <label for="inv_thumbnail"><b>Thumbnail URL*:</b></label>
   <div class="input-wrapper">
-    <input type="text" placeholder="Enter thumbnail URL" name="inv_thumbnail" id="inv_thumbnail" required pattern=".*\..*" value="/images/vehicles/no-image.tn.png">
+    <input type="text" placeholder="Enter thumbnail URL" name="inv_thumbnail" id="inv_thumbnail" required pattern=".*\..*" value="/images/vehicles/no-image-tn.png">
     
       <i class="fas fa-check-circle valid-icon"></i>
   </div>
@@ -103,5 +105,4 @@
   </fieldset>
 </form>
 </div>
-<script src="/js/script.js"></script>
 

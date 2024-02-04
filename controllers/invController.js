@@ -95,9 +95,16 @@ invCont.addNewClassification = async function (req, res) {
  * ************************** */
 invCont.buildAddInventory = async function (req, res) {
   let nav = await utilities.getNav();
+  // Call the function to get the options
+  let classificationOptions = await utilities.getClassificationOptions(
+    req,
+    res
+  );
+
   res.render("./inventory/add-inventory", {
     title: "Add Vehicle",
     nav,
+    classificationOptions,
     errors: null,
   });
 };

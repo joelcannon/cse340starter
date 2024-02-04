@@ -4,7 +4,7 @@ const Util = {};
 /* ************************
  * Constructs the nav HTML unordered list
  ************************** */
-Util.getNav = async function (req, res, next) {
+Util.getNav = async function () {
   let data = await invModel.getClassifications();
   let list = `<ul><li><a href="/" title="Home page">Home</a></li>`;
   data.rows.forEach((row) => {
@@ -12,6 +12,18 @@ Util.getNav = async function (req, res, next) {
   });
   list += "</ul>";
   return list;
+};
+
+/* ************************
+ * Constructs the options HTML for classification select element
+ ************************** */
+Util.getClassificationOptions = async function () {
+  let data = await invModel.getClassifications();
+  let options = "";
+  data.rows.forEach((row) => {
+    options += `<option value="${row.classification_id}">${row.classification_name}</option>`;
+  });
+  return options;
 };
 
 /* **************************************

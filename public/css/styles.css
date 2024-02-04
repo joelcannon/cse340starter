@@ -663,3 +663,25 @@ input:required:valid {
 input:required:valid + .valid-icon {
   display: inline;
 }
+
+.input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.input-wrapper select {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.input-wrapper .valid-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: green;
+  display: none;
+}
