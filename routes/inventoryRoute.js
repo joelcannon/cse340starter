@@ -3,6 +3,7 @@ const express = require("express");
 const router = new express.Router();
 const invController = require("../controllers/invController");
 const utilities = require("../utilities");
+const Validate = require("../utilities/inventory-validation");
 
 // Test route to trigger an error
 router.get("/error", () => {
@@ -38,6 +39,8 @@ router.get(
 // Route to post classification form
 router.post(
   "/add-classification",
+  Validate.classificationRules(),
+  Validate.checkClassification,
   utilities.handleErrors(invController.addNewClassification)
 );
 
