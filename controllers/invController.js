@@ -6,7 +6,7 @@ const invCont = {};
 /* ***************************
  *  Build inventory by classification view
  * ************************** */
-invCont.buildByClassificationId = async function (req, res, next) {
+invCont.buildByClassificationId = async function (req, res) {
   const classification_id = req.params.classificationId;
   const data = await invModel.getInventoryByClassificationId(classification_id);
   const grid = await utilities.buildClassificationGrid(data);
@@ -22,7 +22,7 @@ invCont.buildByClassificationId = async function (req, res, next) {
 /* ***************************
  *  Get vehicle by id
  * ************************** */
-invCont.getVehicleById = async function (req, res, next) {
+invCont.getVehicleById = async function (req, res) {
   const inv_id = req.params.vehicleId;
   const vehicle = await invModel.getVehicleById(inv_id);
   const detail = await utilities.buildCarDetail(vehicle);
@@ -34,6 +34,65 @@ invCont.getVehicleById = async function (req, res, next) {
   });
 };
 
+/* ***************************
+ *  Management View
+ * ************************** */
+invCont.managementView = async function (req, res) {
+  const nav = await utilities.getNav();
+  res.render("./inventory/management", {
+    title: "Vehicle Management",
+    nav,
+    errors: null,
+  });
+};
+
+/* ***************************
+ *  build add classification view
+ * ************************** */
+invCont.buildAddClassification = async function (req, res) {
+  let nav = await utilities.getNav();
+  res.render("./inventory/add-classification", {
+    title: "Add Classification",
+    nav,
+    errors: null,
+  });
+};
+
+/* ****************************************
+ *  Process new classification
+ * *************************************** */
+invCont.addNewClassification = async function (req, res) {
+  let nav = await utilities.getNav();
+  const { classification_name } = req.body;
+
+  const regResult = await invModel.addNewClassification(classification_name);
+
+  if (regResult) {
+    req.flash(
+      "notice",
+      `Congratulations, new classification ${classification_name} added.`
+    );
+    // res.status(201).render("account/login", {
+    //   title: "Login",
+    //   nav,
+    //   errors: null,
+    // });
+  } else {
+    req.flash(
+      "notice",
+      "Sorry, unable to add this new classification, try again."
+    );
+    res.status(501).render("./inventory/add-classification", {
+      title: "Add Classification",
+      nav,
+      errors: null,
+    });
+  }
+};
+
+/* ***************************
+ *  Trigger Errors
+ * ************************** */
 invCont.triggerError = (req, res, next) => {
   try {
     let err = new Error("Intentional error triggered");
@@ -43,4 +102,5 @@ invCont.triggerError = (req, res, next) => {
     next(err);
   }
 };
+
 module.exports = invCont;

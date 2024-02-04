@@ -5,7 +5,7 @@ const bcrypt = require("bcryptjs");
 /* ***************************
  *  build login view
  * ************************** */
-async function buildLogin(req, res, next) {
+async function buildLogin(req, res) {
   let nav = await utilities.getNav();
   res.render("account/login", {
     title: "Login",
@@ -17,7 +17,7 @@ async function buildLogin(req, res, next) {
 /* ***************************
  *  build register view
  * ************************** */
-async function buildRegister(req, res, next) {
+async function buildRegister(req, res) {
   let nav = await utilities.getNav();
   res.render("account/register", {
     title: "Register",
@@ -67,7 +67,7 @@ async function registerAccount(req, res) {
   if (regResult) {
     req.flash(
       "notice",
-      `Congratulations, you\'re registered ${account_firstname}. Please log in.`
+      `Congratulations, you're registered ${account_firstname}. Please log in.`
     );
     res.status(201).render("account/login", {
       title: "Login",

@@ -10,6 +10,26 @@ async function getClassifications() {
 }
 
 /* ***************************
+ *  add new classification
+ * ************************** */
+async function addNewClassification(classificationName) {
+  try {
+    const result = await pool.query(
+      "INSERT INTO public.classification (classification_name) VALUES ($1) RETURNING *",
+      [classificationName]
+    );
+    return result;
+  } catch (err) {
+    if (err.code === "23505") {
+      // 23505 is the error code for a unique violation in PostgreSQL
+      throw new Error("Classification name already exists");
+    } else {
+      throw err;
+    }
+  }
+}
+
+/* ***************************
  *  Get all inventory items and classification_name by classification_id
  * ************************** */
 async function getInventoryByClassificationId(classification_id) {
@@ -47,4 +67,5 @@ module.exports = {
   getClassifications,
   getInventoryByClassificationId,
   getVehicleById,
+  addNewClassification,
 };
