@@ -139,6 +139,11 @@ invCont.addNewInventory = async function (req, res) {
     classification_id
   );
   let nav = await utilities.getNav(); // get after adding new classification
+  // Call the function to get the options
+  let classificationOptions = await utilities.getClassificationOptions(
+    req,
+    res
+  );
 
   if (regResult) {
     req.flash("notice", `Congratulations, this new vehicle was added.`);
@@ -152,6 +157,7 @@ invCont.addNewInventory = async function (req, res) {
     res.status(501).render("./inventory/add-inventory", {
       title: "Add Vehicle!",
       nav,
+      classificationOptions,
       errors: null,
     });
   }

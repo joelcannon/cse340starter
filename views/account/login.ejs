@@ -17,22 +17,22 @@
 <div class="login">
   <form id="loginForm" action="/account/login" method="post">
     <fieldset>
-      <p>
+      <!-- <p> -->
           <label for="account_email">Email*:</label>
           <div class="input-wrapper">
-            <input type="email" name="account_email" placeholder="Enter Email" required value="<%= locals.account_email %>">
+            <input type="email" name="account_email" placeholder="Enter Email" required value="<%= locals.account_email %>" title="Please enter a valid email address.">
           <i class="fas fa-check-circle valid-icon"></i>
           </div>
-      </p>
+      <!-- </p> -->
       <div>
-        <label for="account_password">Password**:</label>
+        <label for="account_password">Password*:</label>
         <div  class="input-wrapper">
-          <input type="password" name="account_password" id="password" placeholder="Enter Password" required pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,}$">
+          <input type="password" name="account_password" id="password" placeholder="Enter Password" required pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,}$" title="At least 8 characters long with a minimum of 1 uppercase, 1 digit and 1 special char.">
           <i class="fas fa-eye" id="togglePassword"></i>
         </div>
       </div>
       <p class="requirements">* required</p>
-        <p class="requirements">** 8 char min, with at least 1 upper, 1 number, 1 special char</p>
+        <!-- <p class="requirements">** 8 char min, with at least 1 upper, 1 number, 1 special char</p> -->
       <button type="submit" id="submit">Log In</button>
   </fieldset>
 </form>

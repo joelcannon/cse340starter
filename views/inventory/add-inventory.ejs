@@ -19,87 +19,65 @@
   <form id="registerForm" action="/inv/add-inventory" method="post">
       <fieldset>
         
-      <p>
         <label for="classification_id"><b>Classification*:</b></label>
         <div class="input-wrapper">
-            <!-- <select name="classification_id" id="classification_id" required>
-                <option value="1">SUV</option>
-            </select> -->
+            
             <select name="classification_id" id="classification_id" required>
               <%- classificationOptions %>
             </select>
             <i class="fas fa-check-circle valid-icon"></i>
         </div>
-    </p>
 
-    <p>
       <label for="inv_make"><b>Make*:</b></label>
       <div class="input-wrapper">
           <input type="text" placeholder="Enter make" name="inv_make" id="inv_make" required pattern=".{2,}" value="<%= locals.inv_make %>" title="Please enter two or more characters">
           <i class="fas fa-check-circle valid-icon"></i>
       </div>
-  </p>
-      <p>
         <label for="inv_model"><b>Model*:</b></label>
         <div class="input-wrapper">
             <input type="text" placeholder="Enter model" name="inv_model" id="inv_model" required pattern=".{3,}" value="<%= locals.inv_model %>" title="Please enter three or more characters">
             <i class="fas fa-check-circle valid-icon"></i>
         </div>
-    </p>
-    <p>
       <label for="inv_description"><b>Description*:</b></label>
       <div class="input-wrapper">
           <input type="text" placeholder="Enter description" name="inv_description" id="inv_description" required value="<%= locals.inv_description %>">
           <i class="fas fa-check-circle valid-icon"></i>
       </div>
-  </p>
 
-<p>
   <label for="inv_image"><b>Image URL*:</b></label>
   <div class="input-wrapper">
       <input type="text" placeholder="Enter image URL" name="inv_image" id="inv_image" required pattern=".*\..*" value="/images/vehicles/no-image.png">
       <i class="fas fa-check-circle valid-icon"></i>
   </div>
-</p>
 
-<p>
   <label for="inv_thumbnail"><b>Thumbnail URL*:</b></label>
   <div class="input-wrapper">
     <input type="text" placeholder="Enter thumbnail URL" name="inv_thumbnail" id="inv_thumbnail" required pattern=".*\..*" value="/images/vehicles/no-image-tn.png">
     
       <i class="fas fa-check-circle valid-icon"></i>
   </div>
-</p>
 
-<p>
   <label for="inv_price"><b>Price*:</b></label>
   <div class="input-wrapper">
       <input type="text" placeholder="Enter price" name="inv_price" id="inv_price" required pattern="^\d+(\.\d{1,2})?$" value="<%= locals.inv_price %>" title="Please enter a valid price with a maximum of 2 decimal places">
       <i class="fas fa-check-circle valid-icon"></i>
   </div>
-</p>
 
-<p>
   <label for="inv_year"><b>Year*:</b></label>
   <div class="input-wrapper">
-    <input type="number" min="1900" max="2100" placeholder="Enter year" name="inv_year" id="inv_year" required value="<%= locals.inv_year %>" title="Please enter a valid year (4 digits)">
+    <input type="number" min="1900" max="2100" placeholder="Enter year" name="inv_year" id="inv_year" required value="<%= locals.inv_year %>" title="Please enter a valid year, 1900-2100">
       <i class="fas fa-check-circle valid-icon"></i>
   </div>
-</p>
-<p>
   <label for="inv_miles"><b>Miles*:</b></label>
   <div class="input-wrapper">
       <input type="text" placeholder="Enter miles" name="inv_miles" id="inv_miles" required pattern="^\d+$" value="<%= locals.inv_miles %>" title="Please enter a valid number of miles">
       <i class="fas fa-check-circle valid-icon"></i>
   </div>
-</p>
-<p>
   <label for="inv_color"><b>Color*:</b></label>
   <div class="input-wrapper">
       <input type="text" placeholder="Enter color" name="inv_color" id="inv_color" required pattern=".{2,}" value="<%= locals.inv_color %>" title="Please enter two or more characters">
       <i class="fas fa-check-circle valid-icon"></i>
   </div>
-</p>
 
       <button type="submit" id="submit">Add</button>
   </fieldset>

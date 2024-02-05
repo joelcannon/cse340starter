@@ -128,7 +128,6 @@ header {
 }
 
 #top-header {
-  margin: 10px 0;
   padding: 0px;
   display: flex;
   justify-content: space-between;
@@ -183,9 +182,18 @@ nav li a {
   text-decoration: none;
 }
 
+/* Responsive styles for mobile screens */
+@media (max-width: 600px) {
+  nav li a {
+    font-size: 14px;
+    padding: 5px;
+  }
+}
+
 nav li a:hover {
-  background-color: #111;
-  color: white;
+  background-color: #000;
+  color: red;
+  text-decoration: none;
 }
 
 main {
@@ -571,15 +579,16 @@ form {
 
 label {
   font-weight: bold;
-  margin-bottom: 5px;
+  /* margin-bottom: 5px; */
 }
 
+select,
 input[type="text"],
 input[type="number"],
 input[type="email"],
 input[type="password"] {
   padding: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
 }
@@ -669,13 +678,13 @@ input:required:valid + .valid-icon {
   width: 100%;
 }
 
-.input-wrapper select {
+/* .input-wrapper select {
   width: 100%;
   padding: 10px;
   font-size: 16px;
   border-radius: 5px;
   border: 1px solid #ccc;
-}
+} */
 
 .input-wrapper .valid-icon {
   position: absolute;

@@ -62,11 +62,11 @@ validate.inventoryRules = () => {
       .withMessage("Description cannot be empty."),
     body("inv_image")
       .trim()
-      .custom((value) => /^\/[a-zA-Z0-9\/\.-]+$/.test(value))
+      .custom((value) => /^\/[a-zA-Z0-9/.-]+$/.test(value))
       .withMessage("Image must be a valid partial URL."),
     body("inv_thumbnail")
       .trim()
-      .custom((value) => /^\/[a-zA-Z0-9\/\.-]+$/.test(value))
+      .custom((value) => /^\/[a-zA-Z0-9/.-]+$/.test(value))
       .withMessage("Thumbnail must be a valid partial URL."),
     body("inv_price")
       .trim()
@@ -101,16 +101,21 @@ validate.checkInventoryData = async (req, res, next) => {
     inv_year,
     inv_miles,
     inv_color,
-    classification_id,
   } = req.body;
   let errors = [];
   errors = validationResult(req);
   if (!errors.isEmpty()) {
     let nav = await utilities.getNav();
+    // Call the function to get the options
+    let classificationOptions = await utilities.getClassificationOptions(
+      req,
+      res
+    );
     res.render("inventory/add-inventory", {
       errors,
       title: "Add Vehicle",
       nav,
+      classificationOptions,
       inv_make,
       inv_model,
       inv_description,
@@ -120,7 +125,6 @@ validate.checkInventoryData = async (req, res, next) => {
       inv_year,
       inv_miles,
       inv_color,
-      classification_id,
     });
     return;
   }
