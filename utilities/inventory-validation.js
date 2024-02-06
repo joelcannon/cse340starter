@@ -101,6 +101,7 @@ validate.checkInventoryData = async (req, res, next) => {
     inv_year,
     inv_miles,
     inv_color,
+    classification_id,
   } = req.body;
   let errors = [];
   errors = validationResult(req);
@@ -108,8 +109,7 @@ validate.checkInventoryData = async (req, res, next) => {
     let nav = await utilities.getNav();
     // Call the function to get the options
     let classificationOptions = await utilities.getClassificationOptions(
-      req,
-      res
+      classification_id
     );
     res.render("inventory/add-inventory", {
       errors,

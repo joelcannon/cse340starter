@@ -96,10 +96,7 @@ invCont.addNewClassification = async function (req, res) {
 invCont.buildAddInventory = async function (req, res) {
   let nav = await utilities.getNav();
   // Call the function to get the options
-  let classificationOptions = await utilities.getClassificationOptions(
-    req,
-    res
-  );
+  let classificationOptions = await utilities.getClassificationOptions();
 
   res.render("./inventory/add-inventory", {
     title: "Add Vehicle",
@@ -138,11 +135,11 @@ invCont.addNewInventory = async function (req, res) {
     inv_color,
     classification_id
   );
+  console.log({ classification_id });
   let nav = await utilities.getNav(); // get after adding new classification
   // Call the function to get the options
   let classificationOptions = await utilities.getClassificationOptions(
-    req,
-    res
+    classification_id
   );
 
   if (regResult) {

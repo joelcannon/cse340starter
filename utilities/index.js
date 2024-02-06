@@ -18,11 +18,15 @@ Util.getNav = async function () {
 /* ************************
  * Constructs the options HTML for classification select element
  ************************** */
-Util.getClassificationOptions = async function () {
+Util.getClassificationOptions = async function (selectedId) {
   let data = await invModel.getClassifications();
   let options = "";
   data.rows.forEach((row) => {
-    options += `<option value="${row.classification_id}">${row.classification_name}</option>`;
+    if (Number(row.classification_id) === Number(selectedId)) {
+      options += `<option value="${row.classification_id}" selected>${row.classification_name}</option>`;
+    } else {
+      options += `<option value="${row.classification_id}">${row.classification_name}</option>`;
+    }
   });
   return options;
 };
