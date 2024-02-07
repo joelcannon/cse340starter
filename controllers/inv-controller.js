@@ -110,7 +110,18 @@ invCont.buildAddInventory = async function (req, res) {
  * *************************************** */
 invCont.addNewInventory = async function (req, res) {
   const inventoryData = req.body;
-  const regResult = await invModel.addNewInventory(inventoryData);
+  const regResult = await invModel.addNewInventory(
+    inventoryData.inv_make,
+    inventoryData.inv_model,
+    inventoryData.inv_description,
+    inventoryData.inv_image,
+    inventoryData.inv_thumbnail,
+    inventoryData.inv_price,
+    inventoryData.inv_year,
+    inventoryData.inv_miles,
+    inventoryData.inv_color,
+    inventoryData.classification_id
+  );
   let nav = await utilities.getNav();
   let classificationOptions = await utilities.getClassificationOptions(
     inventoryData.classification_id
