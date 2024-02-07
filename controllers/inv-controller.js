@@ -1,5 +1,5 @@
 const invModel = require("../models/inventory-model");
-const utilities = require("../utilities/");
+const utilities = require("../utilities");
 
 const invCont = {};
 
@@ -95,7 +95,6 @@ invCont.addNewClassification = async function (req, res) {
  * ************************** */
 invCont.buildAddInventory = async function (req, res) {
   let nav = await utilities.getNav();
-  // Call the function to get the options
   let classificationOptions = await utilities.getClassificationOptions();
 
   res.render("./inventory/add-inventory", {
@@ -110,36 +109,11 @@ invCont.buildAddInventory = async function (req, res) {
  *  Process new inventory
  * *************************************** */
 invCont.addNewInventory = async function (req, res) {
-  const {
-    inv_make,
-    inv_model,
-    inv_description,
-    inv_image,
-    inv_thumbnail,
-    inv_price,
-    inv_year,
-    inv_miles,
-    inv_color,
-    classification_id,
-  } = req.body;
-
-  const regResult = await invModel.addNewInventory(
-    inv_make,
-    inv_model,
-    inv_description,
-    inv_image,
-    inv_thumbnail,
-    inv_price,
-    inv_year,
-    inv_miles,
-    inv_color,
-    classification_id
-  );
-  console.log({ classification_id });
-  let nav = await utilities.getNav(); // get after adding new classification
-  // Call the function to get the options
+  const inventoryData = req.body;
+  const regResult = await invModel.addNewInventory(inventoryData);
+  let nav = await utilities.getNav();
   let classificationOptions = await utilities.getClassificationOptions(
-    classification_id
+    inventoryData.classification_id
   );
 
   if (regResult) {
@@ -158,6 +132,27 @@ invCont.addNewInventory = async function (req, res) {
       errors: null,
     });
   }
+};
+
+/* ****************************************
+ *  Process updated inventory
+ * *************************************** */
+invCont.editInventoryView = async function (req, res) {
+  const inv_id = parseInt(req.params.inv_id);
+  const nav = await utilities.getNav();
+  const [itemData] = await invModel.getInventoryById(inv_id);
+  const classificationSelect = await utilities.buildClassificationList(
+    itemData.classification_id
+  );
+  const itemName = `${itemData.inv_make} ${itemData.inv_model}`;
+
+  res.render("./inventory/edit-inventory", {
+    title: "Edit " + itemName,
+    nav,
+    classificationSelect,
+    errors: null,
+    ...itemData,
+  });
 };
 
 /* ***************************

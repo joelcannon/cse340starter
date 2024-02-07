@@ -1,7 +1,7 @@
 // Needed Resources
 const express = require("express");
 const router = new express.Router();
-const invController = require("../controllers/invController");
+const invController = require("../controllers/inv-controller");
 const utilities = require("../utilities");
 const Validate = require("../utilities/inventory-validation");
 

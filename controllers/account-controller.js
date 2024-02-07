@@ -1,4 +1,4 @@
-const utilities = require("../utilities/");
+const utilities = require("../utilities");
 const accountModel = require("../models/account-model");
 const bcrypt = require("bcryptjs");
 
@@ -15,7 +15,7 @@ async function buildLogin(req, res) {
 }
 
 /* ***************************
- *  build register view
+ *  Build register view
  * ************************** */
 async function buildRegister(req, res) {
   let nav = await utilities.getNav();
@@ -31,19 +31,16 @@ async function buildRegister(req, res) {
  * *************************************** */
 async function registerAccount(req, res) {
   let nav = await utilities.getNav();
-  const {
-    account_firstname,
-    account_lastname,
-    account_email,
-    account_password,
-  } = req.body;
+  let accountData = req.body;
 
   // Hash the password before storing
-  let hashedPassword;
   try {
     // regular password and cost (salt is generated automatically)
     console.time("hashing");
-    hashedPassword = await bcrypt.hash(account_password, 10);
+    accountData.account_password = await bcrypt.hash(
+      accountData.account_password,
+      10
+    );
     console.timeEnd("hashing");
   } catch (error) {
     req.flash(
@@ -55,19 +52,15 @@ async function registerAccount(req, res) {
       nav,
       errors: null,
     });
+    return; // return early to prevent further execution
   }
 
-  const regResult = await accountModel.registerAccount(
-    account_firstname,
-    account_lastname,
-    account_email,
-    hashedPassword
-  );
+  const regResult = await accountModel.registerAccount(accountData);
 
   if (regResult) {
     req.flash(
       "notice",
-      `Congratulations, you're registered ${account_firstname}. Please log in.`
+      `Congratulations, you're registered ${accountData.account_firstname}. Please log in.`
     );
     res.status(201).render("account/login", {
       title: "Login",

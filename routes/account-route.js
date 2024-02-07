@@ -2,7 +2,7 @@
 const express = require("express");
 const router = new express.Router();
 const utilities = require("../utilities");
-const accountController = require("../controllers/accountController");
+const accountController = require("../controllers/account-controller");
 const regValidate = require("../utilities/account-validation");
 
 // Route to build login page
