@@ -91,43 +91,25 @@ validate.inventoryRules = () => {
  * Check inventory and return errors or continue to Management
  * ***************************** */
 validate.checkInventoryData = async (req, res, next) => {
-  const {
-    inv_make,
-    inv_model,
-    inv_description,
-    inv_image,
-    inv_thumbnail,
-    inv_price,
-    inv_year,
-    inv_miles,
-    inv_color,
-    classification_id,
-  } = req.body;
-  let errors = [];
-  errors = validationResult(req);
+  const inventoryData = req.body;
+  const errors = validationResult(req);
+
   if (!errors.isEmpty()) {
-    let nav = await utilities.getNav();
-    // Call the function to get the options
-    let classificationOptions = await utilities.getClassificationOptions(
-      classification_id
+    const nav = await utilities.getNav();
+    const classificationOptions = await utilities.getClassificationOptions(
+      inventoryData.classification_id
     );
+
     res.render("inventory/add-inventory", {
       errors,
       title: "Add Vehicle",
       nav,
       classificationOptions,
-      inv_make,
-      inv_model,
-      inv_description,
-      inv_image,
-      inv_thumbnail,
-      inv_price,
-      inv_year,
-      inv_miles,
-      inv_color,
+      ...inventoryData,
     });
     return;
   }
+
   next();
 };
 

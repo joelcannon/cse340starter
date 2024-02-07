@@ -17,13 +17,11 @@
 <div class="login">
   <form id="loginForm" action="/account/login" method="post">
     <fieldset>
-      <!-- <p> -->
           <label for="account_email">Email*:</label>
           <div class="input-wrapper">
             <input type="email" name="account_email" placeholder="Enter Email" required value="<%= locals.account_email %>" title="Please enter a valid email address.">
           <i class="fas fa-check-circle valid-icon"></i>
           </div>
-      <!-- </p> -->
       <div>
         <label for="account_password">Password*:</label>
         <div  class="input-wrapper">
@@ -32,7 +30,6 @@
         </div>
       </div>
       <p class="requirements">* required</p>
-        <!-- <p class="requirements">** 8 char min, with at least 1 upper, 1 number, 1 special char</p> -->
       <button type="submit" id="submit">Log In</button>
   </fieldset>
 </form>
