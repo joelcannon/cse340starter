@@ -30,6 +30,18 @@ router.post(
   utilities.handleErrors(accountController.accountLogin)
 );
 
+// Process the logout request
+router.get("/logout", function (req, res) {
+  req.session.destroy(function (err) {
+    if (err) {
+      console.log(err);
+    } else {
+      res.clearCookie("jwt");
+      res.redirect("/");
+    }
+  });
+});
+
 // Route to build management page
 router.get(
   "/",
