@@ -85,18 +85,10 @@ async function registerAccount(req, res) {
  *  Process login request
  * ************************************ */
 async function accountLogin(req, res) {
-  let nav = await utilities.getNav();
   const { account_email, account_password } = req.body;
   const accountData = await accountModel.getAccountByEmail(account_email);
   if (!accountData) {
-    req.flash("notice", "Please check your credentials and try again.");
-    res.status(400).render("account/login", {
-      title: "Login",
-      nav,
-      errors: null,
-      account_email,
-    });
-    return;
+    return renderLoginError(req, res, account_email);
   }
   try {
     if (await bcrypt.compare(account_password, accountData.account_password)) {
@@ -108,10 +100,24 @@ async function accountLogin(req, res) {
       );
       res.cookie("jwt", accessToken, { httpOnly: true, maxAge: 3600 * 1000 });
       return res.redirect("/account/");
+    } else {
+      return renderLoginError(req, res, account_email);
     }
   } catch (error) {
     return new Error("Access Forbidden");
   }
+}
+
+async function renderLoginError(req, res, account_email) {
+  let nav = await utilities.getNav();
+  const errorMessage = "Please check your credentials and try again.";
+  req.flash("notice", errorMessage);
+  res.status(400).render("account/login", {
+    title: "Login",
+    nav,
+    errors: null,
+    account_email,
+  });
 }
 
 /* ***************************
