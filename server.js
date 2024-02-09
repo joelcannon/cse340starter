@@ -79,7 +79,7 @@ app.use(async (req, res, next) => {
 * Place after all other middleware
 *************************/
 app.use(async (err, req, res) => {
-  let nav = await utilities.getNav();
+  const nav = await utilities.getNav();
   console.error(`Error at: "${req.originalUrl}": ${err.message}`);
   let message;
   if (err.message === "Classification name already exists") {

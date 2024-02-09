@@ -32,11 +32,13 @@ validate.checkClassification = async (req, res, next) => {
   let errors = [];
   errors = validationResult(req);
   if (!errors.isEmpty()) {
-    let nav = await utilities.getNav();
+    const nav = await utilities.getNav();
+    const classificationList = await utilities.buildClassificationList();
     res.render("inventory/management", {
-      errors,
       title: "Vehicle Management",
       nav,
+      classificationList,
+      errors,
     });
     return;
   }
@@ -96,7 +98,7 @@ validate.checkInventoryData = async (req, res, next) => {
 
   if (!errors.isEmpty()) {
     const nav = await utilities.getNav();
-    const classificationOptions = await utilities.getClassificationOptions(
+    const classificationList = await utilities.buildClassificationList(
       inventoryData.classification_id
     );
 
@@ -104,7 +106,7 @@ validate.checkInventoryData = async (req, res, next) => {
       errors,
       title: "Add Vehicle",
       nav,
-      classificationOptions,
+      classificationList,
       ...inventoryData,
     });
     return;

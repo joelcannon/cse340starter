@@ -28,7 +28,7 @@ router.get(
 );
 
 // Route to inventory management view
-router.get("/", utilities.handleErrors(invController.managementView));
+router.get("/", utilities.handleErrors(invController.buildManagementView));
 
 // Route to build add classification form
 router.get(
@@ -56,6 +56,12 @@ router.post(
   Validate.inventoryRules(),
   Validate.checkInventoryData,
   utilities.handleErrors(invController.addNewInventory)
+);
+
+// Route to get inventory data
+router.get(
+  "/get-inventory/:classification_id",
+  utilities.handleErrors(invController.getInventoryJSON)
 );
 
 module.exports = router;

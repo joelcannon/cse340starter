@@ -17,17 +17,23 @@ Util.getNav = async function () {
 };
 
 /* ************************
- * Constructs the options HTML for classification select element
+ * Constructs the select HTML for classification select element
  ************************** */
-Util.getClassificationOptions = async function (selectedId) {
+Util.buildClassificationList = async function (selectedId) {
   let data = await invModel.getClassifications();
-  let options = "";
+  let list =
+    "<select name='classification_id' id='classification_id' required>";
+
+  // Add default option
+  list += `<option value="">Choose a classification</option>`;
+
   data.rows.forEach((row) => {
     const isSelected =
       Number(row.classification_id) === Number(selectedId) ? "selected" : "";
-    options += `<option value="${row.classification_id}" ${isSelected}>${row.classification_name}</option>`;
+    list += `<option value="${row.classification_id}" ${isSelected}>${row.classification_name}</option>`;
   });
-  return options;
+  list += "</select>";
+  return list;
 };
 
 /* **************************************

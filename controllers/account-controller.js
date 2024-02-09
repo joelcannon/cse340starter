@@ -8,7 +8,7 @@ require("dotenv").config();
  *  build login view
  * ************************** */
 async function buildLogin(req, res) {
-  let nav = await utilities.getNav();
+  const nav = await utilities.getNav();
   res.render("account/login", {
     title: "Login",
     nav,
@@ -20,7 +20,7 @@ async function buildLogin(req, res) {
  *  Build register view
  * ************************** */
 async function buildRegister(req, res) {
-  let nav = await utilities.getNav();
+  const nav = await utilities.getNav();
   res.render("account/register", {
     title: "Register",
     nav,
@@ -32,7 +32,7 @@ async function buildRegister(req, res) {
  *  Process Registration
  * *************************************** */
 async function registerAccount(req, res) {
-  let nav = await utilities.getNav();
+  const nav = await utilities.getNav();
   let accountData = req.body;
 
   // Hash the password before storing
@@ -109,7 +109,7 @@ async function accountLogin(req, res) {
 }
 
 async function renderLoginError(req, res, account_email) {
-  let nav = await utilities.getNav();
+  const nav = await utilities.getNav();
   const errorMessage = "Please check your credentials and try again.";
   req.flash("notice", errorMessage);
   res.status(400).render("account/login", {
@@ -124,7 +124,7 @@ async function renderLoginError(req, res, account_email) {
  *  build management view
  * ************************** */
 async function buildManagement(req, res) {
-  let nav = await utilities.getNav();
+  const nav = await utilities.getNav();
   res.render("account/management", {
     title: "Management",
     nav,
