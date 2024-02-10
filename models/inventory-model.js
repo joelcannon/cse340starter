@@ -12,11 +12,11 @@ async function getClassifications() {
 /* ***************************
  *  add new classification
  * ************************** */
-async function addNewClassification(classificationName) {
+async function addNewClassification(classification_name) {
   try {
     const result = await pool.query(
       "INSERT INTO public.classification (classification_name) VALUES ($1) RETURNING *",
-      [classificationName]
+      [classification_name]
     );
     return result;
   } catch (err) {

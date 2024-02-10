@@ -17,13 +17,13 @@ router.get(
 
 // Route to build inventory by classification view
 router.get(
-  "/type/:classificationId",
+  "/type/:classification_id",
   utilities.handleErrors(invController.buildByClassificationId)
 );
 
 // Route to build vehicle detail view
 router.get(
-  "/detail/:vehicleId",
+  "/detail/:inv_id",
   utilities.handleErrors(invController.getVehicleById)
 );
 

@@ -7,13 +7,14 @@ const invCont = {};
  *  Build inventory by classification view
  * ************************** */
 invCont.buildByClassificationId = async function (req, res) {
-  const classification_id = req.params.classificationId;
+  const { classification_id } = req.params;
   const data = await invModel.getInventoryByClassificationId(classification_id);
   const grid = await utilities.buildClassificationGrid(data);
   const nav = await utilities.getNav();
-  const className = data[0].classification_name;
+  const className =
+    data.length > 0 ? data[0].classification_name : "No classification";
   res.render("./inventory/classification", {
-    title: className + " vehicles",
+    title: `${className} vehicles`,
     nav,
     grid,
   });
@@ -23,7 +24,7 @@ invCont.buildByClassificationId = async function (req, res) {
  *  Get vehicle by id
  * ************************** */
 invCont.getVehicleById = async function (req, res) {
-  const inv_id = req.params.vehicleId;
+  const { inv_id } = req.params;
   const vehicle = await invModel.getVehicleById(inv_id);
   const detail = await utilities.buildCarDetail(vehicle);
   const nav = await utilities.getNav();
@@ -165,7 +166,7 @@ invCont.editInventoryView = async function (req, res) {
   const itemName = `${itemData.inv_make} ${itemData.inv_model}`;
 
   res.render("./inventory/edit-inventory", {
-    title: "Edit " + itemName,
+    title: `Edit ${itemName}`,
     nav,
     classificationList,
     errors: null,
@@ -187,11 +188,13 @@ invCont.getInventoryJSON = async (req, res, next) => {
     classification_id
   );
 
-  if (invData.length > 0) {
-    return res.json(invData);
-  } else {
-    next(new Error("No data returned"));
-  }
+  return res.json(invData);
+
+  // if (invData.length > 0) {
+  //   return res.json(invData);
+  // } else {
+  //   next(new Error("No data returned"));
+  // }
 };
 
 /* ***************************
