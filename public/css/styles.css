@@ -629,6 +629,12 @@ input {
   background-color: #0056b3;
 }
 
+.login button[disabled] {
+  background-color: #cccccc;
+  color: #888888;
+  cursor: not-allowed;
+}
+
 .login span {
   display: block;
 }

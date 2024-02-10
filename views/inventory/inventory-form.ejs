@@ -15,7 +15,7 @@
 <% } %>
 
 <div class="login">
-  <form id="registerForm" action="<%= isUpdate ? '/inv/update' : '/inv/add-inventory' %>" method="post">
+  <form id="inventoryForm" action="<%= isUpdate ? '/inv/update' : '/inv/add-inventory' %>" method="post">
     <fieldset>
         
       <label for="classification_id"><b>Classification*:</b></label>
@@ -72,7 +72,7 @@
     <input type="text" placeholder="Enter color" name="inv_color" id="inv_color" required pattern=".{2,}" value="<%= locals.inv_color %>" title="Please enter two or more characters">
     <i class="fas fa-check-circle valid-icon"></i>
 </div>
-      <button type="submit" id="submit"><%= isUpdate ? 'Update' : 'Add' %></button>
+      <button type="submit" id="submit" disabled><%= isUpdate ? 'Update' : 'Add' %></button>
       
       <% if(isUpdate) { %>
         <input type="hidden" name="inv_id" value="<%= locals.inv_id %>">
@@ -80,3 +80,5 @@
     </fieldset>
   </form>
 </div>
+
+<script src="../../js/inventory-update.js"></script>
