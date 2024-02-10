@@ -33,6 +33,7 @@ validate.checkClassification = async (req, res, next) => {
   next();
 };
 
+// apply inventory rules
 validate.inventoryRules = () => [
   body("inv_make")
     .trim()
@@ -72,6 +73,7 @@ validate.inventoryRules = () => [
     .withMessage("Color must be at least two characters long."),
 ];
 
+// check inventory data when adding new inventory
 validate.checkInventoryData = async (req, res, next) => {
   const inventoryData = req.body;
   const errors = validationResult(req);
@@ -82,12 +84,40 @@ validate.checkInventoryData = async (req, res, next) => {
       inventoryData.classification_id
     );
 
-    res.render("inventory/add-inventory", {
-      errors,
+    res.render("inventory/inventory-form", {
       title: "Add Vehicle",
+      isUpdate: false, // edit view
       nav,
       classificationList,
       ...inventoryData,
+      errors,
+    });
+    return;
+  }
+
+  next();
+};
+
+// check inventory data when updating inventory
+validate.checkUpdateData = async (req, res, next) => {
+  const inventoryData = req.body;
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    const nav = await utilities.getNav();
+    const classificationList = await utilities.buildClassificationList(
+      inventoryData.classification_id
+    );
+
+    const itemName = `${inventoryData.inv_make} ${inventoryData.inv_model}`;
+
+    res.render("inventory/inventory-form", {
+      title: `Edit ${itemName}`,
+      isUpdate: true, // update view
+      nav,
+      classificationList,
+      ...inventoryData,
+      errors,
     });
     return;
   }

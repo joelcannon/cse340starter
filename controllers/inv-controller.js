@@ -104,8 +104,9 @@ invCont.buildAddInventory = async function (req, res) {
   const nav = await utilities.getNav();
   const classificationList = await utilities.buildClassificationList();
 
-  res.render("./inventory/add-inventory", {
+  res.render("./inventory/inventory-form", {
     title: "Add Vehicle",
+    isUpdate: false,
     nav,
     classificationList,
     errors: null,
@@ -153,27 +154,6 @@ invCont.addNewInventory = async function (req, res) {
   }
 };
 
-/* ****************************************
- *  Process updated inventory
- * *************************************** */
-invCont.editInventoryView = async function (req, res) {
-  const inv_id = parseInt(req.params.inv_id);
-  const nav = await utilities.getNav();
-  const [itemData] = await invModel.getInventoryById(inv_id);
-  const classificationList = await utilities.buildClassificationList(
-    itemData.classification_id
-  );
-  const itemName = `${itemData.inv_make} ${itemData.inv_model}`;
-
-  res.render("./inventory/edit-inventory", {
-    title: `Edit ${itemName}`,
-    nav,
-    classificationList,
-    errors: null,
-    ...itemData,
-  });
-};
-
 /* ***************************
  *  Return Inventory by Classification As JSON
  * ************************** */
@@ -189,12 +169,74 @@ invCont.getInventoryJSON = async (req, res, next) => {
   );
 
   return res.json(invData);
+};
 
-  // if (invData.length > 0) {
-  //   return res.json(invData);
-  // } else {
-  //   next(new Error("No data returned"));
-  // }
+/* ****************************************
+ *  Process updated inventory
+ * *************************************** */
+invCont.editInventoryView = async function (req, res) {
+  const inv_id = parseInt(req.params.inv_id);
+  const nav = await utilities.getNav();
+  const itemData = await invModel.getVehicleById(inv_id);
+
+  if (!itemData) {
+    // Handle the error: return an error response or render a different view
+    return res.status(404).send("Vehicle not found");
+  }
+
+  const classificationList = await utilities.buildClassificationList(
+    itemData.classification_id
+  );
+  const itemName = `${itemData.inv_make} ${itemData.inv_model}`;
+
+  res.render("./inventory/inventory-form", {
+    title: `Edit ${itemName}`,
+    isUpdate: true,
+    nav,
+    classificationList,
+    errors: null,
+    ...itemData,
+  });
+};
+
+/* ***************************
+ *  Update Inventory Data
+ * ************************** */
+invCont.updateInventory = async function (req, res) {
+  let nav = await utilities.getNav();
+  const inventoryData = req.body;
+  const updateResult = await invModel.updateInventory(
+    inventoryData.inv_id,
+    inventoryData.inv_make,
+    inventoryData.inv_model,
+    inventoryData.inv_description,
+    inventoryData.inv_image,
+    inventoryData.inv_thumbnail,
+    inventoryData.inv_price,
+    inventoryData.inv_year,
+    inventoryData.inv_miles,
+    inventoryData.inv_color,
+    inventoryData.classification_id
+  );
+
+  if (updateResult) {
+    const itemName = `${updateResult.inv_make} ${updateResult.inv_model}`;
+    req.flash("notice", `The ${itemName} was successfully updated.`);
+    res.redirect("/inv/");
+  } else {
+    const classificationSelect = await utilities.buildClassificationList(
+      inventoryData.classification_id
+    );
+    const itemName = `${inventoryData.inv_make} ${inventoryData.inv_model}`;
+    req.flash("notice", "Sorry, the insert failed.");
+    res.status(501).render("inventory/edit-inventory", {
+      title: "Edit " + itemName,
+      nav,
+      classificationSelect: classificationSelect,
+      errors: null,
+      ...inventoryData,
+    });
+  }
 };
 
 /* ***************************

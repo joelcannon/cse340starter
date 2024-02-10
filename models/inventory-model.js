@@ -71,6 +71,50 @@ async function addNewInventory(
   }
 }
 
+/* ***************************
+ *  update inventory
+ * ************************** */
+async function updateInventory(
+  inv_id,
+  inv_make,
+  inv_model,
+  inv_description,
+  inv_image,
+  inv_thumbnail,
+  inv_price,
+  inv_year,
+  inv_miles,
+  inv_color,
+  classification_id
+) {
+  try {
+    const result = await pool.query(
+      "UPDATE public.inventory SET inv_make = $2, inv_model = $3, inv_description = $4, inv_image = $5, inv_thumbnail = $6, inv_price = $7, inv_year = $8, inv_miles = $9, inv_color = $10, classification_id = $11 WHERE inv_id = $1 RETURNING *",
+      [
+        inv_id,
+        inv_make,
+        inv_model,
+        inv_description,
+        inv_image,
+        inv_thumbnail,
+        inv_price,
+        inv_year,
+        inv_miles,
+        inv_color,
+        classification_id,
+      ]
+    );
+    return result.rows[0];
+  } catch (err) {
+    if (err.code === "23505") {
+      // 23505 is the error code for a unique violation in PostgreSQL
+      throw new Error("Vehicle already exists");
+    } else {
+      throw err;
+    }
+  }
+}
+
 /* **********************
  *   Check for existing classification name
  * ********************* */
@@ -105,13 +149,15 @@ async function getInventoryByClassificationId(classification_id) {
 /* ***************************
  *  Get a specific vehicle by inventory id
  * ************************** */
-
 async function getVehicleById(inv_id) {
   try {
     const data = await pool.query(
       `SELECT * FROM public.inventory WHERE inv_id = $1`,
       [inv_id]
     );
+    if (data.rows.length === 0) {
+      throw new Error(`No vehicle found with id ${inv_id}`);
+    }
     return data.rows[0];
   } catch (error) {
     console.error(`getVehicleById error ${error}`);
@@ -125,4 +171,5 @@ module.exports = {
   addNewClassification,
   checkExistingName,
   addNewInventory,
+  updateInventory,
 };
