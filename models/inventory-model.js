@@ -115,6 +115,17 @@ async function updateInventory(
   }
 }
 
+/* ***************************
+ *  delete inventory
+ * ************************** */
+async function deleteInventory(inv_id) {
+  const result = await pool.query(
+    "DELETE FROM public.inventory WHERE inv_id = $1 RETURNING *",
+    [inv_id]
+  );
+  return result.rows[0];
+}
+
 /* **********************
  *   Check for existing classification name
  * ********************* */
@@ -172,4 +183,5 @@ module.exports = {
   checkExistingName,
   addNewInventory,
   updateInventory,
+  deleteInventory,
 };

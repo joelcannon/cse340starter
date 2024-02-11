@@ -199,6 +199,36 @@ invCont.editInventoryView = async function (req, res) {
   });
 };
 
+/* ****************************************
+ *  Process delete inventory
+ * *************************************** */
+invCont.deleteInventoryView = async function (req, res) {
+  const inv_id = parseInt(req.params.inv_id);
+  const nav = await utilities.getNav();
+  const itemData = await invModel.getVehicleById(inv_id);
+
+  console.warn("inside controller.deleteInventoryView", itemData);
+
+  if (!itemData) {
+    // Handle the error: return an error response or render a different view
+    return res.status(404).send("Vehicle not found");
+  }
+
+  // const classificationList = await utilities.buildClassificationList(
+  //   itemData.classification_id
+  // );
+  const itemName = `${itemData.inv_make} ${itemData.inv_model}`;
+
+  res.render("./inventory/inventory-delete", {
+    title: `Delete ${itemName}`,
+    // isUpdate: true,
+    nav,
+    // classificationList,
+    errors: null,
+    ...itemData,
+  });
+};
+
 /* ***************************
  *  Update Inventory Data
  * ************************** */
@@ -235,6 +265,30 @@ invCont.updateInventory = async function (req, res) {
       classificationSelect: classificationSelect,
       errors: null,
       ...inventoryData,
+    });
+  }
+};
+
+/* ***************************
+ *  Delete Inventory Data
+ * ************************** */
+invCont.deleteInventory = async function (req, res) {
+  // const { inv_id } = req.body;
+  const inventoryData = req.body;
+  const deleteResult = await invModel.deleteInventory(inventoryData.inv_id);
+
+  console.warn("inside controller.deleteInventory", deleteResult);
+
+  if (deleteResult) {
+    const itemName = `${deleteResult.inv_make} ${deleteResult.inv_model}`;
+    req.flash("notice", `The ${itemName} was successfully deleted.`);
+    res.redirect("/inv/");
+  } else {
+    req.flash("notice", "Sorry, the delete failed.");
+    res.status(501).render("inventory/inventory-delete", {
+      title: `Delete ${inventoryData.inv_make} ${inventoryData.inv_model}`,
+      errors: null,
+      ...req.body,
     });
   }
 };
