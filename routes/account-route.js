@@ -49,4 +49,11 @@ router.get(
   utilities.handleErrors(accountController.buildManagement)
 );
 
+// Route to build manage account page
+router.get(
+  "/manage-account",
+  utilities.checkLogin,
+  utilities.handleErrors(accountController.buildManagement)
+);
+
 module.exports = router;

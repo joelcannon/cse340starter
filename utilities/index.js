@@ -102,6 +102,7 @@ const Util = {
           }
           res.locals.accountData = accountData;
           res.locals.loggedin = 1;
+          console.log("authorization established");
           next();
         }
       );
@@ -112,11 +113,32 @@ const Util = {
 
   checkLogin: (req, res, next) => {
     if (res.locals.loggedin) {
+      console.log("logged in");
       next();
     } else {
       req.flash("notice", "Please log in.");
       return res.redirect("/account/login");
     }
+  },
+
+  checkAccountType: (req, res, next) => {
+    // Use the checkLogin function
+    Util.checkLogin(req, res, () => {
+      // If checkLogin calls next(), the user is logged in
+
+      console.log("checkAccountType");
+
+      // Check the account type
+      const accountType = res.locals.accountData.account_type;
+      if (!(accountType === "Employee" || accountType === "Admin")) {
+        //  restrict access - Clients not allowed
+        req.flash("notice", "You do not have permission to access that page.");
+        return res.redirect("/account/login");
+      }
+
+      // If the account type is "Employee" or "Admin", proceed to the next middleware
+      next();
+    });
   },
 };
 

@@ -28,7 +28,11 @@ router.get(
 );
 
 // Route to inventory management view
-router.get("/", utilities.handleErrors(invController.buildManagementView));
+router.get(
+  "/",
+  utilities.checkAccountType,
+  utilities.handleErrors(invController.buildManagementView)
+);
 
 // Route to build add classification form
 router.get(
