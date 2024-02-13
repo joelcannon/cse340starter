@@ -164,19 +164,20 @@ async function buildUpdateProfile(req, res) {
  *  update profile
  * *************************************** */
 async function updateProfile(req, res) {
-  const nav = await utilities.getNav();
   let accountData = req.body;
 
   const updateResults = await accountModel.updateProfile(
     ...Object.values(accountData)
   );
 
+  const nav = await utilities.getNav();
+
   if (updateResults) {
     utilities.updateJwtCookie(res, updateResults.rows[0]);
 
     req.flash(
       "notice",
-      `Congratulations, you're update ${updateResults.rows[0].account_firstname}.`
+      `Congratulations, your profile is updated, ${updateResults.rows[0].account_firstname}.`
     );
     res.status(201).render("account/account-management", {
       title: "Account Management",
