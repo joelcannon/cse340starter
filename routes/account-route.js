@@ -53,7 +53,37 @@ router.get(
 router.get(
   "/manage-account",
   utilities.checkLogin,
-  utilities.handleErrors(accountController.buildManagement)
+  utilities.handleErrors(accountController.buildAccountManagement)
+);
+
+// Route to build update profile page
+router.get(
+  "/update-profile",
+  utilities.checkLogin,
+  utilities.handleErrors(accountController.buildUpdateProfile)
+);
+
+// Route to build update password page
+router.get(
+  "/update-password",
+  utilities.checkLogin,
+  utilities.handleErrors(accountController.buildUpdatePassword)
+);
+
+// Route to build update profile page
+router.post(
+  "/update-profile",
+  regValidate.profileRules(),
+  regValidate.checkProfileData,
+  utilities.handleErrors(accountController.updateProfile)
+);
+
+// Route to build update password page
+router.post(
+  "/update-password",
+  regValidate.passwordRules(),
+  regValidate.checkPasswordData,
+  utilities.handleErrors(accountController.updatePassword)
 );
 
 module.exports = router;

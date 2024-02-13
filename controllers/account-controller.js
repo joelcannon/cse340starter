@@ -38,12 +38,10 @@ async function registerAccount(req, res) {
   // Hash the password before storing
   try {
     // regular password and cost (salt is generated automatically)
-    console.time("hashing");
     accountData.account_password = await bcrypt.hash(
       accountData.account_password,
       10
     );
-    console.timeEnd("hashing");
   } catch (error) {
     req.flash(
       "notice",
@@ -132,10 +130,144 @@ async function buildManagement(req, res) {
   });
 }
 
+/* ***************************
+ *  build account management view
+ * ************************** */
+async function buildAccountManagement(req, res) {
+  const nav = await utilities.getNav();
+  res.render("account/account-management", {
+    title: "Account Management",
+    nav,
+    errors: null,
+  });
+}
+
+/* ***************************
+ *  Build update profile view
+ * ************************** */
+async function buildUpdateProfile(req, res) {
+  const nav = await utilities.getNav();
+  const accountData = res.locals.accountData;
+
+  res.render("account/update-profile", {
+    title: `Update Profile`,
+    nav,
+    errors: null,
+    account_id: accountData.account_id,
+    account_firstname: accountData.account_firstname,
+    account_lastname: accountData.account_lastname,
+    account_email: accountData.account_email,
+  });
+}
+
+/* ****************************************
+ *  update profile
+ * *************************************** */
+async function updateProfile(req, res) {
+  const nav = await utilities.getNav();
+  let accountData = req.body;
+
+  const updateResults = await accountModel.updateProfile(
+    ...Object.values(accountData)
+  );
+
+  if (updateResults) {
+    utilities.updateJwtCookie(res, updateResults.rows[0]);
+
+    req.flash(
+      "notice",
+      `Congratulations, you're update ${updateResults.rows[0].account_firstname}.`
+    );
+    res.status(201).render("account/account-management", {
+      title: "Account Management",
+      nav,
+      errors: null,
+    });
+  } else {
+    req.flash("notice", "Sorry, the profile update failed.");
+    res.status(501).render("account/update-profile", {
+      title: "Update Profile",
+      nav,
+      errors: null,
+      ...accountData,
+    });
+  }
+}
+
+/* ***************************
+ *  Build update password view
+ * ************************** */
+async function buildUpdatePassword(req, res) {
+  const nav = await utilities.getNav();
+  const accountData = res.locals.accountData;
+
+  res.render("account/update-password", {
+    title: `Update Password`,
+    nav,
+    errors: null,
+    account_id: accountData.account_id,
+    account_password: accountData.account_password,
+  });
+}
+
+/* ****************************************
+ *  update password
+ * *************************************** */
+async function updatePassword(req, res) {
+  const nav = await utilities.getNav();
+  let accountData = req.body;
+
+  // Hash the password before storing
+  try {
+    // regular password and cost (salt is generated automatically)
+    accountData.account_password = await bcrypt.hash(
+      accountData.account_password,
+      10
+    );
+  } catch (error) {
+    req.flash("notice", "Sorry, there was an error processing the password.");
+    res.status(500).render("account/update-password", {
+      title: "Update Password",
+      nav,
+      errors: null,
+    });
+    return; // return early to prevent further execution
+  }
+
+  const updateResults = await accountModel.updatePassword(
+    ...Object.values(accountData)
+  );
+
+  if (updateResults) {
+    req.flash(
+      "notice",
+      `Congratulations, your password is updated, ${updateResults.rows[0].account_firstname}.`
+    );
+    res.status(201).render("account/account-management", {
+      title: "Account Management",
+      nav,
+      errors: null,
+    });
+  } else {
+    req.flash("notice", "Sorry, the password update failed.");
+    res.status(501).render("account/update-password", {
+      title: "Update Password",
+      nav,
+      errors: null,
+      ...accountData,
+    });
+  }
+}
+
 module.exports = {
   buildLogin,
   buildRegister,
   registerAccount,
   accountLogin,
   buildManagement,
+  buildAccountManagement,
+  buildUpdateProfile,
+  updateProfile,
+  buildUpdatePassword,
+  updatePassword,
 };

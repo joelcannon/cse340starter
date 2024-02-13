@@ -1,0 +1,44 @@
+<!-- content heading -->
+<% if (title) { %>
+   <h1><%= title %></h1>
+   <% } else {
+     res.redirect('/')
+   } %>
+
+   <%- messages() %>
+
+   <% if (errors) { %>
+    <ul class="notice">
+   <% errors.array().forEach(error => { %>
+     <li><%= error.msg %></li>
+  <%  }) %>
+   </ul>
+  <% } %>
+  
+<div class="login">
+    <form id="updateForm" action="/account/update-profile" method="post">
+        <fieldset>
+            <label for="account_firstname"><b>First Name*:</b></label>
+            <div class="input-wrapper">
+              <input type="text" placeholder="Enter first name" name="account_firstname" id="accountFirstname" required value="<%= locals.account_firstname %>" title="Please enter one or more characters.">
+            <i class="fas fa-check-circle valid-icon"></i>
+            </div>
+            <label for="account_lastname"><b>Last Name*:</b></label>
+            <div class="input-wrapper">
+              <input type="text" placeholder="Enter last name" name="account_lastname" required value="<%= locals.account_lastname %>" title="Please enter one or more characters.">
+            <i class="fas fa-check-circle valid-icon"></i>
+            </div>
+            <label for="account_email">Email*:</label>
+            <div class="input-wrapper">
+              <input type="email" name="account_email" placeholder="Enter Email" required value="<%= locals.account_email %>" title="Please enter a valid email address.">
+            <i class="fas fa-check-circle valid-icon"></i>
+            </div>
+        
+        <p class="requirements">* required</p>
+        <button type="submit" id="submit" disabled>Update</button>
+        <input type="hidden" name="account_id" value="<%= locals.account_id %>">
+    </fieldset>
+</form>
+  </div>
+  <script src="/js/script.js"></script>
+  <script src="/js/update-form.js"></script>

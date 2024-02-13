@@ -1,5 +1,5 @@
 // Get the form and the submit button
-const form = document.getElementById("inventoryForm");
+const form = document.getElementById("updateForm");
 const submitButton = document.getElementById("submit");
 
 // Listen for input events on the form

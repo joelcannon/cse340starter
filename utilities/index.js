@@ -86,6 +86,16 @@ const Util = {
       </div>`;
   },
 
+  // regenerate jwt token with updated account data
+  updateJwtCookie: (res, accountData) => {
+    console.log("updateJwtCookie", accountData);
+    delete accountData.account_password;
+    const accessToken = jwt.sign(accountData, process.env.ACCESS_TOKEN_SECRET, {
+      expiresIn: 3600 * 1000,
+    });
+    res.cookie("jwt", accessToken, { httpOnly: true, maxAge: 3600 * 1000 });
+  },
+
   handleErrors: (fn) => (req, res, next) =>
     Promise.resolve(fn(req, res, next)).catch(next),
 

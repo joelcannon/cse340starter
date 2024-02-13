@@ -15,7 +15,7 @@
 <% } %>
 
 <div class="login">
-  <form id="inventoryForm" action="<%= isUpdate ? '/inv/update' : '/inv/add-inventory' %>" method="post">
+  <form id="updateForm" action="<%= isUpdate ? '/inv/update' : '/inv/add-inventory' %>" method="post">
     <fieldset>
         
       <label for="classification_id"><b>Classification*:</b></label>
@@ -81,4 +81,4 @@
   </form>
 </div>
 
-<script src="../../js/inventory-update.js"></script>
+<script src="../../js/update-form.js"></script>
