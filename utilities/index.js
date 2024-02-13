@@ -88,7 +88,6 @@ const Util = {
 
   // regenerate jwt token with updated account data
   updateJwtCookie: (res, accountData) => {
-    console.log("updateJwtCookie", accountData);
     delete accountData.account_password;
     const accessToken = jwt.sign(accountData, process.env.ACCESS_TOKEN_SECRET, {
       expiresIn: 3600 * 1000,

@@ -90,13 +90,7 @@ async function accountLogin(req, res) {
   }
   try {
     if (await bcrypt.compare(account_password, accountData.account_password)) {
-      delete accountData.account_password;
-      const accessToken = jwt.sign(
-        accountData,
-        process.env.ACCESS_TOKEN_SECRET,
-        { expiresIn: 3600 * 1000 }
-      );
-      res.cookie("jwt", accessToken, { httpOnly: true, maxAge: 3600 * 1000 });
+      utilities.updateJwtCookie(res, accountData);
       return res.redirect("/account/");
     } else {
       return renderLoginError(req, res, account_email);
@@ -179,11 +173,12 @@ async function updateProfile(req, res) {
       "notice",
       `Congratulations, your profile is updated, ${updateResults.rows[0].account_firstname}.`
     );
-    res.status(201).render("account/account-management", {
-      title: "Account Management",
-      nav,
-      errors: null,
-    });
+    res.redirect("/account/manage-account");
+    // res.status(201).render("account/account-management", {
+    //   title: "Account Management",
+    //   nav,
+    //   errors: null,
+    // });
   } else {
     req.flash("notice", "Sorry, the profile update failed.");
     res.status(501).render("account/update-profile", {
