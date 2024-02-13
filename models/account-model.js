@@ -26,10 +26,11 @@ async function registerAccount(
 /* **********************
  *   Check for existing email
  * ********************* */
-async function checkExistingEmail(account_email) {
+async function checkExistingEmail(account_email, accountIdToExclude) {
   try {
-    const sql = "SELECT * FROM account WHERE account_email = $1";
-    const email = await pool.query(sql, [account_email]);
+    const sql =
+      "SELECT * FROM account WHERE account_email = $1 AND account_id != $2";
+    const email = await pool.query(sql, [account_email, accountIdToExclude]);
     return email.rowCount;
   } catch (error) {
     return error.message;

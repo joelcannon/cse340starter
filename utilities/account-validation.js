@@ -14,14 +14,7 @@ validate.loginRules = () => {
       .isEmail()
       .normalizeEmail() // refer to validator.js docs
       .withMessage("A valid email is required."),
-    // .custom(async (account_email) => {
-    //   const emailExists = await accountModel.checkExistingEmail(
-    //     account_email
-    //   );
-    //   if (!emailExists) {
-    //     throw new Error("Email does not exist. Please log in with different email");
-    //   }
-    // }),
+
     // password is required and must be strong password
     body("account_password")
       .trim()
@@ -61,7 +54,8 @@ validate.registationRules = () => {
       .withMessage("A valid email is required.")
       .custom(async (account_email) => {
         const emailExists = await accountModel.checkExistingEmail(
-          account_email
+          account_email,
+          null
         );
         if (emailExists) {
           throw new Error("Email exists. Please log in or use different email");
@@ -104,15 +98,17 @@ validate.profileRules = () => {
       .trim()
       .isEmail()
       .normalizeEmail() // refer to validator.js docs
-      .withMessage("A valid email is required."),
-    // .custom(async (account_email) => {
-    //   const emailExists = await accountModel.checkExistingEmail(
-    //     account_email
-    //   );
-    //   if (emailExists) {
-    //     throw new Error("Email exists. Please log in or use different email");
-    //   }
-    // }),
+      .withMessage("A valid email is required.")
+      .custom(async (account_email, { req }) => {
+        const account_id = req.body.account_id; // get account_id from the request body
+        const emailExists = await accountModel.checkExistingEmail(
+          account_email,
+          account_id
+        );
+        if (emailExists) {
+          throw new Error("Email exists. Please log in or use different email");
+        }
+      }),
   ];
 };
 
