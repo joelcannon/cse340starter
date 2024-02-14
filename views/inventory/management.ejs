@@ -15,10 +15,10 @@
 <% } %>
 
 <p> <a href="/inv/add-classification">Add New Classification</a></p>
-<p> <a href="/inv/add-inventory">Add New Vehicle</a></p>
+<p> <a href="/inv/add-inventory">Add New Inventory</a></p>
 
 <h2>Manage Inventory</h2>
-<p>Choose a Classification for vehicle to edit.</p>
+<p>Choose a Classification for Inventory to Edit.</p>
 
 <%- classificationList %>
 
@@ -27,5 +27,10 @@
 </noscript>  
 
 <table id="inventoryDisplay"></table>
+
+<h2>Approve Changes</h2>
+<p>Choose a New Classification to Approve.</p>
+
+<%- newClassificationList %>
 
 <script src="../../js/inventory.js"></script>

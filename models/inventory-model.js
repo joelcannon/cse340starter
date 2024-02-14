@@ -3,10 +3,17 @@ const pool = require("../database/");
 /* ***************************
  *  Get all classification data
  * ************************** */
-async function getClassifications() {
-  return await pool.query(
-    "SELECT * FROM public.classification ORDER BY classification_name"
-  );
+async function getClassifications(approvalStatus = null) {
+  let query = "SELECT * FROM public.classification";
+
+  if (approvalStatus !== null) {
+    query += " WHERE classification_approved = $1"; // newest first
+    return await pool.query(query, [approvalStatus]);
+  }
+
+  query += " ORDER BY classification_name"; // alphabetical
+
+  return await pool.query(query);
 }
 
 /* ***************************

@@ -42,11 +42,16 @@ invCont.buildManagementView = async function (req, res) {
   const nav = await utilities.getNav();
 
   const classificationList = await utilities.buildClassificationList();
+  const newClassificationList = await utilities.buildClassificationList(
+    null,
+    false
+  );
 
   res.render("./inventory/management", {
     title: "Vehicle Management",
     nav,
     classificationList,
+    newClassificationList,
     errors: null,
   });
 };
@@ -72,6 +77,10 @@ invCont.addNewClassification = async function (req, res) {
   const regResult = await invModel.addNewClassification(classification_name);
   const nav = await utilities.getNav(); // get after adding new classification
   const classificationList = await utilities.buildClassificationList();
+  const newClassificationList = await utilities.buildClassificationList(
+    null,
+    false
+  );
 
   if (regResult) {
     req.flash(
@@ -82,6 +91,7 @@ invCont.addNewClassification = async function (req, res) {
       title: "Vehicle Management",
       nav,
       classificationList,
+      newClassificationList,
       errors: null,
     });
   } else {
@@ -134,6 +144,10 @@ invCont.addNewInventory = async function (req, res) {
   const classificationList = await utilities.buildClassificationList(
     inventoryData.classification_id
   );
+  const newClassificationList = await utilities.buildClassificationList(
+    inventoryData.classification_id,
+    false
+  );
 
   if (regResult) {
     req.flash("notice", `Congratulations, this new vehicle was added.`);
@@ -142,6 +156,7 @@ invCont.addNewInventory = async function (req, res) {
       nav,
       errors: null,
       classificationList,
+      newClassificationList,
     });
   } else {
     req.flash("notice", "Sorry, unable to add this new vehicle, try again.");
@@ -149,6 +164,7 @@ invCont.addNewInventory = async function (req, res) {
       title: "Add Vehicle!",
       nav,
       classificationList,
+      newClassificationList,
       errors: null,
     });
   }

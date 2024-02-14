@@ -21,11 +21,15 @@ validate.checkClassification = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const nav = await utilities.getNav();
-    const classificationList = await utilities.buildClassificationList();
+    const classificationList = await utilities.buildClassificationList(null); // get all classifications
+    const newClassificationList = await utilities.buildClassificationList(
+      false
+    ); // get unapproved classifications
     res.render("inventory/management", {
       title: "Vehicle Management",
       nav,
       classificationList,
+      newClassificationList,
       errors,
     });
     return;

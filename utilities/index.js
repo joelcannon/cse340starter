@@ -13,8 +13,11 @@ const Util = {
       .join("")}</ul>`;
   },
 
-  buildClassificationList: async function (selectedId) {
-    const { rows } = await invModel.getClassifications();
+  buildClassificationList: async function (
+    selectedId = null,
+    approvalStatus = null
+  ) {
+    const { rows } = await invModel.getClassifications(approvalStatus);
     return `<select name='classification_id' id='classification_id' required>
       <option value="">Choose a classification</option>
       ${rows
