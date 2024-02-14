@@ -57,3 +57,8 @@ When you installed Git and cloned the remote repository in week 1, you should ha
 1. Go to http://localhost:5500 in a browser tab. Nothing should be visible as the server has not been setup to repond to that route.
 2. Add "/filename.html" to the end of the URL (replacing filename with the name of the file you moved to the public folder).
 3. You should see that page in the browser.
+
+4. Build into the existing inventory system a means that will prevent newly added classifications and inventory items from being immediately available on the website. Additionally, do not show classifications in the navigation menu if they do not have any approved inventory items.
+5. Build a tool that is available only to administrators to show new classifications and inventory items that have been added to the site, but not yet approved. This should be available from the account management view.
+6. Build a tool that allows administrators to approve or reject new classifications and/or inventory items. If rejected, the item is deleted from the database. If approved, the item becomes live on the site. Inventory items cannot be added to an unapproved classification.
+7. When approved, the administrator’s id is added to the database showing that it was them that approved the item and the date the approval happened
