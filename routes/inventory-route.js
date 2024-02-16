@@ -30,7 +30,7 @@ router.get(
 // Route to inventory management view
 router.get(
   "/",
-  utilities.checkAccountType,
+  utilities.checkAccountType(),
   utilities.handleErrors(invController.buildManagementView)
 );
 
@@ -93,6 +93,13 @@ router.post(
   // "/delete/:inv_id",
   "/delete/",
   utilities.handleErrors(invController.deleteInventory)
+);
+
+// Route to approve changes view
+router.get(
+  "/approve-changes/",
+  utilities.checkAccountType(["Admin"]),
+  utilities.handleErrors(invController.buildApproveChanges)
 );
 
 module.exports = router;

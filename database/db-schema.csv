@@ -1,0 +1,29 @@
+"table_name","column_name","data_type","character_maximum_length"
+"classification","classification_id","integer",NULL
+"inventory","inv_id","integer",NULL
+"account","account_id","integer",NULL
+"account","account_firstname","character varying",NULL
+"inventory","inv_description","text",NULL
+"inventory","account_id","integer",NULL
+"session","sid","character varying",NULL
+"inventory","classification_id","integer",NULL
+"account","account_password","character varying",NULL
+"inventory","inv_make","character varying",NULL
+"inventory","inv_color","character varying",NULL
+"inventory","inv_approved","boolean",NULL
+"classification","classification_approved","boolean",NULL
+"session","expire","timestamp without time zone",NULL
+"classification","account_id","integer",NULL
+"inventory","inv_approved_date","timestamp without time zone",NULL
+"classification","classification_name","character varying",NULL
+"inventory","inv_model","character varying",NULL
+"inventory","inv_thumbnail","character varying",NULL
+"inventory","inv_miles","integer",NULL
+"inventory","inv_year","character",4
+"session","sess","json",NULL
+"account","account_type","USER-DEFINED",NULL
+"inventory","inv_image","character varying",NULL
+"account","account_email","character varying",NULL
+"classification","classification_approval_date","timestamp without time zone",NULL
+"inventory","inv_price","numeric",NULL
+"account","account_lastname","character varying",NULL

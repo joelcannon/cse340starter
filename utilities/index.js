@@ -18,8 +18,10 @@ const Util = {
     approvalStatus = null
   ) {
     const { rows } = await invModel.getClassifications(approvalStatus);
-    return `<select name='classification_id' id='classification_id' required>
-      <option value="">Choose a classification</option>
+    return `<select name='classification_id' id='${
+      approvalStatus === false ? "new-Classification_id" : "classification_id"
+    }' required>
+    <option value="">Choose a classification</option>
       ${rows
         .map(
           ({ classification_id, classification_name }) =>
@@ -133,24 +135,29 @@ const Util = {
     }
   },
 
-  checkAccountType: (req, res, next) => {
-    // Use the checkLogin function
-    Util.checkLogin(req, res, () => {
-      // If checkLogin calls next(), the user is logged in
+  checkAccountType: (allowedTypes = ["Employee", "Admin"]) => {
+    return (req, res, next) => {
+      // Use the checkLogin function
+      Util.checkLogin(req, res, () => {
+        // If checkLogin calls next(), the user is logged in
 
-      console.log("checkAccountType");
+        console.log("checkAccountType");
 
-      // Check the account type
-      const accountType = res.locals.accountData.account_type;
-      if (!(accountType === "Employee" || accountType === "Admin")) {
-        //  restrict access - Clients not allowed
-        req.flash("notice", "You do not have permission to access that page.");
-        return res.redirect("/account/login");
-      }
+        // Check the account type
+        const accountType = res.locals.accountData.account_type;
+        if (!allowedTypes.includes(accountType)) {
+          // restrict access - Users with disallowed account types not allowed
+          req.flash(
+            "notice",
+            "You do not have permission to access that page."
+          );
+          return res.redirect("/account/login");
+        }
 
-      // If the account type is "Employee" or "Admin", proceed to the next middleware
-      next();
-    });
+        // If the account type is allowed, proceed to the next middleware
+        next();
+      });
+    };
   },
 };
 

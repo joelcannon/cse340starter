@@ -310,6 +310,27 @@ invCont.deleteInventory = async function (req, res) {
 };
 
 /* ***************************
+ *  Approve Changes View
+ * ************************** */
+invCont.buildApproveChanges = async function (req, res) {
+  const nav = await utilities.getNav();
+
+  // const classificationList = await utilities.buildClassificationList();
+  // const newClassificationList = await utilities.buildClassificationList(
+  //   null,
+  //   false
+  // );
+
+  res.render("./inventory/approve-changes", {
+    title: "Approve Inventory Changes",
+    nav,
+    // classificationList,
+    // newClassificationList,
+    errors: null,
+  });
+};
+
+/* ***************************
  *  Trigger Errors
  * ************************** */
 invCont.triggerError = (req, res, next) => {
