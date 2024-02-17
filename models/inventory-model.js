@@ -302,14 +302,12 @@ async function getApprovedClassificationsWithUnapprovedInventory() {
 async function getUnapprovedInventoryWithAccountNames() {
   const query = `
     SELECT 
-      i.inv_id, 
-      i.inv_name, 
-      i.inv_approved_date, 
-      a.account_firstname, 
-      a.account_lastname
+      i.*, 
+      COALESCE(a.account_firstname, 'NA') AS account_firstname, 
+      COALESCE(a.account_lastname, '') AS account_lastname
     FROM 
       public.inventory i
-    JOIN 
+    LEFT JOIN 
       public.account a ON i.account_id = a.account_id
     WHERE 
       i.inv_approved = false

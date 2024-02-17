@@ -114,4 +114,10 @@ router.post(
   utilities.handleErrors(invController.rejectClassification)
 );
 
+// Route to build vehicle detail view
+router.get(
+  "/review-inventory/:inv_id",
+  utilities.handleErrors(invController.reviewInventoryById)
+);
+
 module.exports = router;

@@ -165,7 +165,7 @@ const Util = {
     const { rows } = await invModel.getClassifications(approvalStatus);
     // Set up the table labels
     let dataTable = `
-    <table id="inventoryDisplay">
+    <table id="classificationTable">
       <thead>
         <tr>
           <th>Classification Name</th>
@@ -201,6 +201,66 @@ const Util = {
     </table>`;
 
     // Return the built HTML table
+    return dataTable;
+  },
+
+  buildInventoryTable: async function () {
+    let rows;
+    try {
+      rows = await invModel.getUnapprovedInventoryWithAccountNames();
+    } catch (error) {
+      console.error(
+        "Error getting unapproved inventory with account names:",
+        error
+      );
+      rows = [];
+    }
+
+    let dataTable = `
+      <table id="inventoryTable">
+        <thead>
+          <tr>
+            <th>Make:Model</th>
+            <th>Added By</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+    `;
+
+    if (rows.length === 0) {
+      dataTable += `
+        <tr>
+          <td colspan="3">No data available</td>
+        </tr>
+      `;
+    } else {
+      rows.forEach(
+        ({
+          inv_id,
+          inv_make,
+          inv_model,
+          account_firstname,
+          account_lastname,
+        }) => {
+          const makeModel = `${inv_make}:${inv_model}`;
+          const fullName = `${account_firstname} ${account_lastname}`;
+          dataTable += `
+          <tr id="row-${inv_id}">
+            <td>${makeModel}</td>
+            <td>${fullName}</td>
+            <td>
+              <a href="review-inventory/${inv_id}">Review</a>
+            </td>
+          </tr>
+        `;
+        }
+      );
+    }
+
+    dataTable += `</tbody>
+    </table>`;
+
     return dataTable;
   },
 };

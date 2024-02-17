@@ -314,7 +314,8 @@ invCont.deleteInventory = async function (req, res) {
  * ************************** */
 invCont.buildApproveChanges = async function (req, res) {
   const nav = await utilities.getNav();
-  const table = await utilities.buildClassificationTable();
+  const classificationTable = await utilities.buildClassificationTable();
+  const invTable = await utilities.buildInventoryTable();
 
   // const classificationList = await utilities.buildClassificationList();
   // const newClassificationList = await utilities.buildClassificationList(
@@ -328,7 +329,8 @@ invCont.buildApproveChanges = async function (req, res) {
     // classificationList,
     // newClassificationList,
     errors: null,
-    table,
+    classificationTable,
+    invTable,
   });
 };
 
@@ -374,6 +376,22 @@ invCont.rejectClassification = async (req, res, next) => {
   return res
     .status(200)
     .json({ message: "Classification deleted successfully" });
+};
+
+/* ***************************
+ *  review inventory by id
+ * ************************** */
+invCont.reviewInventoryById = async function (req, res) {
+  const { inv_id } = req.params;
+  const vehicle = await invModel.getVehicleById(inv_id);
+  const detail = await utilities.buildCarDetail(vehicle);
+  const nav = await utilities.getNav();
+  res.render("./inventory/review", {
+    title: `Review ${vehicle.inv_make} ${vehicle.inv_model}`,
+    nav,
+    detail,
+    inv_id,
+  });
 };
 
 /* ***************************
