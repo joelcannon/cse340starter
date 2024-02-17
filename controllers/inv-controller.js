@@ -314,6 +314,7 @@ invCont.deleteInventory = async function (req, res) {
  * ************************** */
 invCont.buildApproveChanges = async function (req, res) {
   const nav = await utilities.getNav();
+  const table = await utilities.buildClassificationTable();
 
   // const classificationList = await utilities.buildClassificationList();
   // const newClassificationList = await utilities.buildClassificationList(
@@ -327,7 +328,52 @@ invCont.buildApproveChanges = async function (req, res) {
     // classificationList,
     // newClassificationList,
     errors: null,
+    table,
   });
+};
+
+/* ***************************
+ *  update classification as approved
+ * ************************** */
+invCont.approveClassification = async (req, res, next) => {
+  const classification_id = parseInt(req.params.classification_id);
+  if (isNaN(classification_id)) {
+    return next(new Error("Invalid classification_id"));
+  }
+
+  const account_id = res.locals.accountData.account_id;
+  console.log("account_id", account_id);
+  const classificationData = await invModel.approveClassification(
+    classification_id,
+    account_id
+  );
+  console.log(classificationData);
+
+  // return res.json(invData);
+  return res
+    .status(200)
+    .json({ message: "Classification approved successfully" });
+};
+
+/* ***************************
+ *  the classification is deleted when rejected.
+ * ************************** */
+invCont.rejectClassification = async (req, res, next) => {
+  const classification_id = parseInt(req.params.classification_id);
+
+  if (isNaN(classification_id)) {
+    return next(new Error("Invalid classification_id"));
+  }
+
+  const classificationData = await invModel.deleteClassification(
+    classification_id
+  );
+  console.log(classificationData);
+
+  // return res.json(invData);
+  return res
+    .status(200)
+    .json({ message: "Classification deleted successfully" });
 };
 
 /* ***************************

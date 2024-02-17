@@ -159,6 +159,50 @@ const Util = {
       });
     };
   },
+
+  buildClassificationTable: async function () {
+    const approvalStatus = false;
+    const { rows } = await invModel.getClassifications(approvalStatus);
+    // Set up the table labels
+    let dataTable = `
+    <table id="inventoryDisplay">
+      <thead>
+        <tr>
+          <th>Classification Name</th>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>
+      </thead>
+      <tbody>
+    `;
+
+    // Check if data array is empty
+    if (rows.length === 0) {
+      dataTable += `
+        <tr>
+          <td colspan="3">No data available</td>
+        </tr>
+      `;
+    } else {
+      // Iterate over all classifications in the array and put each in a row
+      rows.forEach(({ classification_id, classification_name }) => {
+        console.log(`${classification_id}, ${classification_name}`);
+        dataTable += `
+          <tr id="row-${classification_id}">
+            <td>${classification_name}</td>
+            <td><button onclick="approveClassification(${classification_id})">Approve</button></td>
+            <td><button onclick="rejectClassification(${classification_id})">Reject</button></td>
+          </tr>
+        `;
+      });
+    }
+
+    dataTable += `</tbody>
+    </table>`;
+
+    // Return the built HTML table
+    return dataTable;
+  },
 };
 
 module.exports = Util;

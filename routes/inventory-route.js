@@ -102,4 +102,16 @@ router.get(
   utilities.handleErrors(invController.buildApproveChanges)
 );
 
+// Route to approve classification
+router.post(
+  "/approve-classification/:classification_id",
+  utilities.handleErrors(invController.approveClassification)
+);
+
+// Route to reject classification
+router.post(
+  "/reject-classification/:classification_id",
+  utilities.handleErrors(invController.rejectClassification)
+);
+
 module.exports = router;

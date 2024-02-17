@@ -22,7 +22,7 @@ async function getClassifications(approvalStatus = null) {
 async function addNewClassification(classification_name, account_id = null) {
   try {
     const result = await pool.query(
-      "INSERT INTO public.classification (classification_name, account_id, classification_approved, classification_approved_date) VALUES ($1, $2, false, NOW()) RETURNING *",
+      "INSERT INTO public.classification (classification_name, account_id, classification_approved, classification_approval_date) VALUES ($1, $2, false, NOW()) RETURNING *",
       [classification_name, account_id]
     );
     return result;
@@ -194,7 +194,7 @@ async function getUnapprovedClassifications() {
     SELECT 
       c.classification_id, 
       c.classification_name, 
-      c.classification_approved_date, 
+      c.classification_approval_date, 
       a.account_firstname, 
       a.account_lastname
     FROM 
@@ -224,7 +224,7 @@ async function approveClassification(classificationId, accountId) {
       public.classification
     SET 
       classification_approved = true, 
-      classification_approved_date = NOW(), 
+      classification_approval_date = NOW(), 
       account_id = $2
     WHERE 
       classification_id = $1`;
@@ -245,7 +245,7 @@ async function getApprovedClassificationsWithInventory() {
     SELECT 
       c.classification_id, 
       c.classification_name, 
-      c.classification_approved_date
+      c.classification_approval_date
     FROM 
       public.classification c
     WHERE 
@@ -274,7 +274,7 @@ async function getApprovedClassificationsWithUnapprovedInventory() {
     SELECT 
       c.classification_id, 
       c.classification_name, 
-      c.classification_approved_date
+      c.classification_approval_date
     FROM 
       public.classification c
     WHERE 
