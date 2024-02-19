@@ -395,6 +395,29 @@ invCont.reviewInventoryById = async function (req, res) {
 };
 
 /* ***************************
+ *  update inventory as approved
+ * ************************** */
+invCont.approveInventory = async (req, res, next) => {
+  const inv_id = parseInt(req.params.inv_id);
+  if (isNaN(inv_id)) {
+    return next(new Error("Invalid inventory_id"));
+  }
+
+  const account_id = res.locals.accountData.account_id;
+  console.log("account_id", account_id);
+  const inventoryData = await invModel.approveInventory(inv_id, account_id);
+  console.log(inventoryData);
+  const itemName = `${inventoryData.inv_make} ${inventoryData.inv_model}`;
+  req.flash("notice", `The ${itemName} was successfully approved.`);
+  return res.redirect("/inv/approve-changes");
+
+  // return res.json(invData);
+  // return res
+  //   .status(200)
+  //   .json({ message: "Inventory approved successfully" });
+};
+
+/* ***************************
  *  Trigger Errors
  * ************************** */
 invCont.triggerError = (req, res, next) => {

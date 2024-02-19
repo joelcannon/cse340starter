@@ -43,6 +43,7 @@ router.get(
 // Route to post classification form
 router.post(
   "/add-classification",
+  utilities.checkAccountType(),
   Validate.classificationRules(),
   Validate.checkClassification,
   utilities.handleErrors(invController.addNewClassification)
@@ -57,6 +58,7 @@ router.get(
 // Route to post inventory form
 router.post(
   "/add-inventory",
+  utilities.checkAccountType(),
   Validate.inventoryRules(),
   Validate.checkInventoryData,
   utilities.handleErrors(invController.addNewInventory)
@@ -77,6 +79,7 @@ router.get(
 // Route to update inventory form
 router.post(
   "/update/",
+  utilities.checkAccountType(),
   Validate.inventoryRules(),
   Validate.checkUpdateData,
   utilities.handleErrors(invController.updateInventory)
@@ -92,6 +95,7 @@ router.get(
 router.post(
   // "/delete/:inv_id",
   "/delete/",
+  utilities.checkAccountType(),
   utilities.handleErrors(invController.deleteInventory)
 );
 
@@ -105,19 +109,29 @@ router.get(
 // Route to approve classification
 router.post(
   "/approve-classification/:classification_id",
+  utilities.checkAccountType(["Admin"]),
   utilities.handleErrors(invController.approveClassification)
 );
 
 // Route to reject classification
 router.post(
   "/reject-classification/:classification_id",
+  utilities.checkAccountType(["Admin"]),
   utilities.handleErrors(invController.rejectClassification)
 );
 
-// Route to build vehicle detail view
+// Route to build vehicle review view
 router.get(
   "/review-inventory/:inv_id",
+  utilities.checkAccountType(["Admin"]),
   utilities.handleErrors(invController.reviewInventoryById)
+);
+
+// Route to approve inventory
+router.get(
+  "/approve-inventory/:inv_id",
+  utilities.checkAccountType(["Admin"]),
+  utilities.handleErrors(invController.approveInventory)
 );
 
 module.exports = router;

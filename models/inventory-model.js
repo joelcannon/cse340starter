@@ -335,10 +335,12 @@ async function approveInventory(inventoryId, accountId) {
       inv_approved_date = NOW(), 
       account_id = $2
     WHERE 
-      inv_id = $1`;
+      inv_id = $1
+    RETURNING *`;
 
   try {
-    await pool.query(query, [inventoryId, accountId]);
+    const result = await pool.query(query, [inventoryId, accountId]);
+    return result.rows[0]; // Return the updated row
   } catch (err) {
     console.error(err);
     throw err;
