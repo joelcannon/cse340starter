@@ -4,7 +4,8 @@ require("dotenv").config();
 
 const Util = {
   getNav: async function () {
-    const { rows } = await invModel.getClassifications();
+    // const { rows } = await invModel.getClassifications();
+    const rows = await invModel.getApprovedClassificationsWithInventory();
     return `<ul>${rows
       .map(
         ({ classification_id, classification_name }) =>
@@ -160,6 +161,7 @@ const Util = {
     };
   },
 
+  // get unapproved classifications with account names
   buildClassificationTable: async function () {
     const approvalStatus = false;
     const { rows } = await invModel.getClassifications(approvalStatus);
@@ -168,9 +170,10 @@ const Util = {
     <table id="classificationTable">
       <thead>
         <tr>
-          <th>Classification Name</th>
-          <td>&nbsp;</td>
-          <td>&nbsp;</td>
+          <th>Classification</th>
+          <th>Added By</th>
+          <th>Actions</th>
+          <th>&nbsp;</th>
         </tr>
       </thead>
       <tbody>
@@ -185,16 +188,27 @@ const Util = {
       `;
     } else {
       // Iterate over all classifications in the array and put each in a row
-      rows.forEach(({ classification_id, classification_name }) => {
-        console.log(`${classification_id}, ${classification_name}`);
-        dataTable += `
+      rows.forEach(
+        ({
+          classification_id,
+          classification_name,
+          account_firstname,
+          account_lastname,
+        }) => {
+          const accountFullName = `${account_firstname} ${account_lastname}`;
+          console.log(
+            `${classification_id}, ${classification_name}; ${accountFullName}`
+          );
+          dataTable += `
           <tr id="row-${classification_id}">
             <td>${classification_name}</td>
+            <td>${accountFullName}</td>
             <td><button onclick="approveClassification(${classification_id})">Approve</button></td>
             <td><button onclick="rejectClassification(${classification_id})">Reject</button></td>
           </tr>
         `;
-      });
+        }
+      );
     }
 
     dataTable += `</tbody>

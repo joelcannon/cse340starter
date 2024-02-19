@@ -1,23 +1,30 @@
 const pool = require("../database/");
 
 /* ***************************
- *  Get all classification data
+ *  Get all classification data with the creator name and filtered by approval status
  * ************************** */
 async function getClassifications(approvalStatus = null) {
-  let query = "SELECT * FROM public.classification";
+  let query = `
+    SELECT c.*,  
+    COALESCE(a.account_firstname, 'NA') AS account_firstname, 
+    COALESCE(a.account_lastname, '') AS account_lastname
+    FROM public.classification AS c
+    LEFT JOIN public.account AS a ON c.account_id = a.account_id`;
+
+  const params = [];
 
   if (approvalStatus !== null) {
-    query += " WHERE classification_approved = $1"; // newest first
-    return await pool.query(query, [approvalStatus]);
+    query += " WHERE c.classification_approved = $1";
+    params.push(approvalStatus);
   }
 
-  query += " ORDER BY classification_name"; // alphabetical
+  query += " ORDER BY c.classification_name"; // alphabetical
 
-  return await pool.query(query);
+  return await pool.query(query, params);
 }
 
 /* ***************************
- *  add new classification
+ *  add new unapproved classification with who added it
  * ************************** */
 async function addNewClassification(classification_name, account_id = null) {
   try {
@@ -153,18 +160,18 @@ async function checkExistingName(classification_name) {
 /* ***************************
  *  Get all inventory items and classification_name by classification_id
  * ************************** */
-async function getInventoryByClassificationId(classification_id) {
+async function getApprovedInventoryByClassificationId(classification_id) {
   try {
     const data = await pool.query(
       `SELECT * FROM public.inventory AS i 
       JOIN public.classification AS c 
       ON i.classification_id = c.classification_id 
-      WHERE i.classification_id = $1`,
+      WHERE i.classification_id = $1 AND i.inv_approved = true`,
       [classification_id]
     );
     return data.rows;
   } catch (error) {
-    console.error(`getInventoryByClassificationId error ${error}`);
+    console.error(`getApprovedInventoryByClassificationId error ${error}`);
   }
 }
 
@@ -357,7 +364,7 @@ async function deleteClassification(classificationId) {
 
 module.exports = {
   getClassifications,
-  getInventoryByClassificationId,
+  getApprovedInventoryByClassificationId,
   getVehicleById,
   addNewClassification,
   checkExistingName,

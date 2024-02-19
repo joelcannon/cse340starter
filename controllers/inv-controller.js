@@ -8,7 +8,9 @@ const invCont = {};
  * ************************** */
 invCont.buildByClassificationId = async function (req, res) {
   const { classification_id } = req.params;
-  const data = await invModel.getInventoryByClassificationId(classification_id);
+  const data = await invModel.getApprovedInventoryByClassificationId(
+    classification_id
+  );
   const grid = await utilities.buildClassificationGrid(data);
   const nav = await utilities.getNav();
   const className =
@@ -74,7 +76,13 @@ invCont.buildAddClassification = async function (req, res) {
 invCont.addNewClassification = async function (req, res) {
   const { classification_name } = req.body;
 
-  const regResult = await invModel.addNewClassification(classification_name);
+  const account_id = res.locals.accountData.account_id;
+  console.log("account_id", account_id);
+
+  const regResult = await invModel.addNewClassification(
+    classification_name,
+    account_id
+  );
   const nav = await utilities.getNav(); // get after adding new classification
   const classificationList = await utilities.buildClassificationList();
   const newClassificationList = await utilities.buildClassificationList(
@@ -180,7 +188,7 @@ invCont.getInventoryJSON = async (req, res, next) => {
     return next(new Error("Invalid classification_id"));
   }
 
-  const invData = await invModel.getInventoryByClassificationId(
+  const invData = await invModel.getApprovedInventoryByClassificationId(
     classification_id
   );
 
@@ -249,7 +257,7 @@ invCont.deleteInventoryView = async function (req, res) {
  *  Update Inventory Data
  * ************************** */
 invCont.updateInventory = async function (req, res) {
-  let nav = await utilities.getNav();
+  const nav = await utilities.getNav();
   const inventoryData = req.body;
   const updateResult = await invModel.updateInventory(
     inventoryData.inv_id,
