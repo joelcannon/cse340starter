@@ -4,8 +4,8 @@ require("dotenv").config();
 
 const Util = {
   getNav: async function () {
-    // const { rows } = await invModel.getClassifications();
-    const rows = await invModel.getApprovedClassificationsWithInventory();
+    const rows =
+      await invModel.getApprovedClassificationsWithApprovedInventory();
     return `<ul>${rows
       .map(
         ({ classification_id, classification_name }) =>

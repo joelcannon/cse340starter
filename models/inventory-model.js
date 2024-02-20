@@ -247,22 +247,22 @@ async function approveClassification(classificationId, accountId) {
 /* ***************************
  *  Get approved classifications linked to at least one inventory
  * ************************** */
-async function getApprovedClassificationsWithInventory() {
+async function getApprovedClassificationsWithApprovedInventory() {
   const query = `
-    SELECT 
-      c.classification_id, 
-      c.classification_name, 
-      c.classification_approval_date
-    FROM 
-      public.classification c
-    WHERE 
-      c.classification_approved = true AND
-      EXISTS (
-        SELECT 1 FROM public.inventory i
-        WHERE i.classification_id = c.classification_id
-      )
-    ORDER BY 
-      c.classification_name`;
+  SELECT 
+  c.classification_id, 
+  c.classification_name, 
+  c.classification_approval_date
+FROM 
+  public.classification c
+WHERE 
+  c.classification_approved = true AND
+  EXISTS (
+    SELECT 1 FROM public.inventory i
+    WHERE i.classification_id = c.classification_id AND i.inv_approved = true
+  )
+ORDER BY 
+  c.classification_name`;
 
   try {
     const res = await pool.query(query);
@@ -374,7 +374,7 @@ module.exports = {
 
   getUnapprovedClassifications,
   approveClassification,
-  getApprovedClassificationsWithInventory,
+  getApprovedClassificationsWithApprovedInventory,
   getApprovedClassificationsWithUnapprovedInventory,
   getUnapprovedInventoryWithAccountNames,
   approveInventory,
