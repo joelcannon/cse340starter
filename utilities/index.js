@@ -16,7 +16,7 @@ const Util = {
 
   buildClassificationList: async function (
     selectedId = null,
-    approvalStatus = null
+    approvalStatus = true
   ) {
     const { rows } = await invModel.getClassifications(approvalStatus);
     return `<select name='classification_id' id='${
