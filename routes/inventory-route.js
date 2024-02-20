@@ -134,4 +134,11 @@ router.get(
   utilities.handleErrors(invController.approveInventory)
 );
 
+// Route to reject inventory
+router.get(
+  "/reject-inventory/:inv_id",
+  utilities.checkAccountType(["Admin"]),
+  utilities.handleErrors(invController.rejectInventory)
+);
+
 module.exports = router;

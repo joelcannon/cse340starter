@@ -449,11 +449,22 @@ invCont.approveInventory = async (req, res, next) => {
   const itemName = `${inventoryData.inv_make} ${inventoryData.inv_model}`;
   req.flash("notice", `The ${itemName} was successfully approved.`);
   return res.redirect("/inv/approve-changes");
+};
 
-  // return res.json(invData);
-  // return res
-  //   .status(200)
-  //   .json({ message: "Inventory approved successfully" });
+/* ***************************
+ *  update inventory as approved
+ * ************************** */
+invCont.rejectInventory = async (req, res, next) => {
+  const inv_id = parseInt(req.params.inv_id);
+  if (isNaN(inv_id)) {
+    return next(new Error("Invalid inventory_id"));
+  }
+
+  const inventoryData = await invModel.deleteInventory(inv_id);
+  console.log(inventoryData);
+  const itemName = `${inventoryData.inv_make} ${inventoryData.inv_model}`;
+  req.flash("notice", `The ${itemName} was successfully rejected and deleted.`);
+  return res.redirect("/inv/approve-changes");
 };
 
 /* ***************************
