@@ -1,6 +1,6 @@
 "use strict";
 
-// Get a list of items in inventory based on the classification_id
+// Get a list of items in inventory based on the classification_id - unapproved inventory too
 const classificationList = document.querySelector("#classification_id");
 classificationList.addEventListener("change", async function () {
   try {
@@ -39,7 +39,7 @@ function buildInventoryList(data) {
   if (data.length === 0) {
     dataTable += `
       <tr>
-        <td colspan="3">No data available</td>
+        <td colspan="3">No new vehicles available.</td>
       </tr>
     `;
   } else {

@@ -4,7 +4,7 @@ const utilities = require("../utilities");
 const invCont = {};
 
 /* ***************************
- *  Build inventory by classification view
+ *  Build approved inventory by classification view
  * ************************** */
 invCont.buildByClassificationId = async function (req, res) {
   const { classification_id } = req.params;
@@ -45,18 +45,13 @@ invCont.buildManagementView = async function (req, res) {
 
   const classificationList = await utilities.buildClassificationList(
     null,
-    true
+    null // any inventory
   );
-  // const newClassificationList = await utilities.buildClassificationList(
-  //   null,
-  //   false
-  // );
 
   res.render("./inventory/management", {
     title: "Vehicle Management",
     nav,
     classificationList,
-    // newClassificationList,
     errors: null,
   });
 };
@@ -87,15 +82,11 @@ invCont.addNewClassification = async function (req, res) {
     account_id
   );
   const nav = await utilities.getNav(); // get after adding new classification
-  // const newClassificationList = await utilities.buildClassificationList(
-  //   null,
-  //   false
-  // );
 
   if (regResult) {
     const classificationList = await utilities.buildClassificationList(
       null,
-      true
+      null // any inventory
     );
     req.flash(
       "notice",
@@ -127,8 +118,8 @@ invCont.addNewClassification = async function (req, res) {
 invCont.buildAddInventory = async function (req, res) {
   const nav = await utilities.getNav();
   const classificationList = await utilities.buildClassificationList(
-    null,
-    true
+    null
+    // null // any inventory
   );
 
   res.render("./inventory/inventory-form", {
@@ -164,15 +155,10 @@ invCont.addNewInventory = async function (req, res) {
   );
   const nav = await utilities.getNav();
 
-  // const newClassificationList = await utilities.buildClassificationList(
-  //   inventoryData.classification_id,
-  //   false
-  // );
-
   if (regResult) {
     const classificationList = await utilities.buildClassificationList(
       null, // bi classification preselected.
-      true
+      null // any inventory
     );
     const itemName = `${inventoryData.inv_make} ${inventoryData.inv_model}`;
     req.flash("notice", `Congratulations, ${itemName} was added.`);
@@ -185,17 +171,10 @@ invCont.addNewInventory = async function (req, res) {
     });
   } else {
     const classificationList = await utilities.buildClassificationList(
-      inventoryData.classification_id,
-      true
+      inventoryData.classification_id
+      // null // any inventory
     );
     req.flash("notice", "Sorry, unable to add this new vehicle, try again.");
-    // res.status(501).render("./inventory/add-inventory", {
-    //   title: "Add Vehicle!",
-    //   nav,
-    //   classificationList,
-    //   // newClassificationList,
-    //   errors: null,
-    // });
 
     res.status(501).render("./inventory/inventory-form", {
       title: "Add Vehicle",
@@ -208,7 +187,7 @@ invCont.addNewInventory = async function (req, res) {
 };
 
 /* ***************************
- *  Return Inventory by Classification As JSON
+ *  Return All Inventory by Classification As JSON
  * ************************** */
 invCont.getInventoryJSON = async (req, res, next) => {
   const classification_id = parseInt(req.params.classification_id);
@@ -217,7 +196,7 @@ invCont.getInventoryJSON = async (req, res, next) => {
     return next(new Error("Invalid classification_id"));
   }
 
-  const invData = await invModel.getApprovedInventoryByClassificationId(
+  const invData = await invModel.getInventoryByClassificationId(
     classification_id
   );
 
@@ -238,8 +217,8 @@ invCont.editInventoryView = async function (req, res) {
   }
 
   const classificationList = await utilities.buildClassificationList(
-    itemData.classification_id,
-    true
+    itemData.classification_id
+    // null // any inventory
   );
   const itemName = `${itemData.inv_make} ${itemData.inv_model}`;
 
@@ -268,9 +247,6 @@ invCont.deleteInventoryView = async function (req, res) {
     return res.status(404).send("Vehicle not found");
   }
 
-  // const classificationList = await utilities.buildClassificationList(
-  //   itemData.classification_id
-  // );
   const itemName = `${itemData.inv_make} ${itemData.inv_model}`;
 
   res.render("./inventory/inventory-delete", {
@@ -289,6 +265,10 @@ invCont.deleteInventoryView = async function (req, res) {
 invCont.updateInventory = async function (req, res) {
   const nav = await utilities.getNav();
   const inventoryData = req.body;
+
+  const account_id = res.locals.accountData.account_id;
+  console.log("account_id", account_id);
+
   const updateResult = await invModel.updateInventory(
     inventoryData.inv_id,
     inventoryData.inv_make,
@@ -300,7 +280,8 @@ invCont.updateInventory = async function (req, res) {
     inventoryData.inv_year,
     inventoryData.inv_miles,
     inventoryData.inv_color,
-    inventoryData.classification_id
+    inventoryData.classification_id,
+    account_id
   );
 
   if (updateResult) {
@@ -309,13 +290,14 @@ invCont.updateInventory = async function (req, res) {
     res.redirect("/inv/");
   } else {
     const classificationSelect = await utilities.buildClassificationList(
-      inventoryData.classification_id,
-      true
+      inventoryData.classification_id
+      // null // any inventory
     );
     const itemName = `${inventoryData.inv_make} ${inventoryData.inv_model}`;
     req.flash("notice", "Sorry, the insert failed.");
-    res.status(501).render("inventory/edit-inventory", {
+    res.status(501).render("inventory/inventory-form", {
       title: "Edit " + itemName,
+      isUpdate: true,
       nav,
       classificationSelect: classificationSelect,
       errors: null,
@@ -355,12 +337,6 @@ invCont.buildApproveChanges = async function (req, res) {
   const nav = await utilities.getNav();
   const classificationTable = await utilities.buildClassificationTable();
   const invTable = await utilities.buildInventoryTable();
-
-  // const classificationList = await utilities.buildClassificationList();
-  // const newClassificationList = await utilities.buildClassificationList(
-  //   null,
-  //   false
-  // );
 
   res.render("./inventory/approve-changes", {
     title: "Approve Inventory Changes",

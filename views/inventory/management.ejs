@@ -16,7 +16,10 @@
 
 <p> <a href="/inv/add-classification">Add New Classification</a></p>
 <p> <a href="/inv/add-inventory">Add New Inventory</a></p>
+
+<% if(locals.accountData.account_type === "Admin") { %>
 <p> <a href="/inv/approve-changes">Approve Changes</a></p>
+<% } %>
 
 <h2>Manage Inventory</h2>
 <p>Choose a Classification for Inventory to Edit.</p>

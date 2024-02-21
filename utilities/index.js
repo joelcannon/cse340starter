@@ -16,12 +16,15 @@ const Util = {
 
   buildClassificationList: async function (
     selectedId = null,
-    approvalStatus = true
+    cApproved = true // jwc
   ) {
-    const { rows } = await invModel.getClassifications(approvalStatus);
-    return `<select name='classification_id' id='${
-      approvalStatus === false ? "new-Classification_id" : "classification_id"
-    }' required>
+    let rows;
+    if (cApproved === true) {
+      rows = await invModel.getClassifications(cApproved);
+    } else {
+      rows = await invModel.getApprovedClassificationsWithAnyInventory();
+    }
+    return `<select name='classification_id' id='classification_id' required>
     <option value="">Choose a classification</option>
       ${rows
         .map(
@@ -164,7 +167,7 @@ const Util = {
   // get unapproved classifications with account names
   buildClassificationTable: async function () {
     const approvalStatus = false;
-    const { rows } = await invModel.getClassifications(approvalStatus);
+    const rows = await invModel.getClassifications(approvalStatus);
     // Set up the table labels
     let dataTable = `
     <table id="classificationTable">
@@ -183,7 +186,7 @@ const Util = {
     if (rows.length === 0) {
       dataTable += `
         <tr>
-          <td colspan="3">No data available</td>
+          <td colspan="3">No new classifications need approval.</td>
         </tr>
       `;
     } else {
@@ -234,8 +237,9 @@ const Util = {
       <table id="inventoryTable">
         <thead>
           <tr>
-            <th>Make:Model</th>
-            <th>Added By</th>
+          <th>Classification</th>
+          <th>Make:Model</th>
+          <th>Added By</th>
             <th>Action</th>
           </tr>
         </thead>
@@ -245,7 +249,7 @@ const Util = {
     if (rows.length === 0) {
       dataTable += `
         <tr>
-          <td colspan="3">No data available</td>
+          <td colspan="4">No new vehicles need approval.</td>
         </tr>
       `;
     } else {
@@ -256,13 +260,15 @@ const Util = {
           inv_model,
           account_firstname,
           account_lastname,
+          classification_name,
         }) => {
           const makeModel = `${inv_make}:${inv_model}`;
           const fullName = `${account_firstname} ${account_lastname}`;
           dataTable += `
           <tr id="row-${inv_id}">
-            <td>${makeModel}</td>
-            <td>${fullName}</td>
+          <td>${classification_name}</td>
+          <td>${makeModel}</td>
+          <td>${fullName}</td>
             <td>
               <a href="review-inventory/${inv_id}">Review</a>
             </td>

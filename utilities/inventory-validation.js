@@ -23,16 +23,13 @@ validate.checkClassification = async (req, res, next) => {
     const nav = await utilities.getNav();
     const classificationList = await utilities.buildClassificationList(
       null,
-      false
-    ); // get all approved classifications
-    // const newClassificationList = await utilities.buildClassificationList(
-    //   false
-    // ); // get unapproved classifications
+      null // any inventory
+    );
+
     res.render("inventory/management", {
       title: "Vehicle Management",
       nav,
       classificationList,
-      // newClassificationList,
       errors,
     });
     return;
@@ -88,8 +85,8 @@ validate.checkInventoryData = async (req, res, next) => {
   if (!errors.isEmpty()) {
     const nav = await utilities.getNav();
     const classificationList = await utilities.buildClassificationList(
-      inventoryData.classification_id,
-      true
+      inventoryData.classification_id
+      // null // with any inventory
     );
 
     res.render("inventory/inventory-form", {
@@ -114,8 +111,8 @@ validate.checkUpdateData = async (req, res, next) => {
   if (!errors.isEmpty()) {
     const nav = await utilities.getNav();
     const classificationList = await utilities.buildClassificationList(
-      inventoryData.classification_id,
-      true
+      inventoryData.classification_id
+      // null // with any inventory
     );
 
     const itemName = `${inventoryData.inv_make} ${inventoryData.inv_model}`;
