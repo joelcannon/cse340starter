@@ -64,3 +64,18 @@ When you installed Git and cloned the remote repository in week 1, you should ha
 2. Build a tool that is available only to administrators to show new classifications and inventory items that have been added to the site, but not yet approved. This should be available from the account management view.
 3. Build a tool that allows administrators to approve or reject new classifications and/or inventory items. If rejected, the item is deleted from the database. If approved, the item becomes live on the site. Inventory items cannot be added to an unapproved classification.
 4. When approved, the administrator’s id is added to the database showing that it was them that approved the item and the date the approval happened
+
+account_firstname: Basic
+account_lastname: Client
+account_email: basic@340.edu
+account_password: I@mABas1cCl!3nt
+
+account_firstname: Happy
+account_lastname: Employee
+account_email: happy@340.edu
+account_password: I@mAnEmpl0y33
+
+account_firstname: Manager
+account_lastname: User
+account_email: manager@340.edu
+account_password: I@mAnAdm!n1strat0r

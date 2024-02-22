@@ -31,8 +31,6 @@ async function getClassifications(cApproved = null) {
 
   query += " ORDER BY c.classification_name"; // alphabetical
 
-  // const result = await pool.query(query, params);
-  // return result.rows;
   return executeQuery(query, params);
 }
 
@@ -41,11 +39,12 @@ async function getClassifications(cApproved = null) {
  * ************************** */
 async function addNewClassification(classification_name, account_id = null) {
   try {
-    const result = await pool.query(
-      "INSERT INTO public.classification (classification_name, account_id, classification_approved, classification_approval_date) VALUES ($1, $2, false, NOW()) RETURNING *",
-      [classification_name, account_id]
-    );
-    return result;
+    const query = `
+      INSERT INTO public.classification 
+      (classification_name, account_id, classification_approved, classification_approval_date) 
+      VALUES ($1, $2, false, NOW()) RETURNING *`;
+    const params = [classification_name, account_id];
+    return await executeQuery(query, params);
   } catch (err) {
     if (err.code === "23505") {
       // 23505 is the error code for a unique violation in PostgreSQL
@@ -150,11 +149,10 @@ async function updateInventory(
  *  delete inventory
  * ************************** */
 async function deleteInventory(inv_id) {
-  const result = await pool.query(
-    "DELETE FROM public.inventory WHERE inv_id = $1 RETURNING *",
-    [inv_id]
-  );
-  return result.rows[0];
+  const query = "DELETE FROM public.inventory WHERE inv_id = $1 RETURNING *";
+  const params = [inv_id];
+  const rows = await executeQuery(query, params);
+  return rows[0];
 }
 
 /* **********************
@@ -162,9 +160,10 @@ async function deleteInventory(inv_id) {
  * ********************* */
 async function checkExistingName(classification_name) {
   try {
-    const sql = "SELECT * FROM classification WHERE classification_name = $1";
-    const name = await pool.query(sql, [classification_name]);
-    return name.rowCount;
+    const query = "SELECT * FROM classification WHERE classification_name = $1";
+    const params = [classification_name];
+    const rows = await executeQuery(query, params);
+    return rows.length;
   } catch (error) {
     return error.message;
   }
@@ -227,11 +226,11 @@ async function getVehicleById(inv_id) {
   const query = `SELECT * FROM public.inventory WHERE inv_id = $1`;
   const params = [inv_id];
 
-  const data = await executeQuery(query, params);
-  if (data.length === 0) {
+  const rows = await executeQuery(query, params);
+  if (rows.length === 0) {
     throw new Error(`No vehicle found with id ${inv_id}`);
   }
-  return data[0];
+  return rows[0];
 }
 
 /* ***************************
@@ -306,9 +305,11 @@ async function approveInventory(inventoryId, accountId) {
       inv_id = $1
     RETURNING *`;
 
+  const params = [inventoryId, accountId];
+
   try {
-    const result = await pool.query(query, [inventoryId, accountId]);
-    return result.rows[0]; // Return the updated row
+    const rows = await executeQuery(query, params);
+    return rows[0]; // Return the updated row
   } catch (err) {
     console.error(err);
     throw err;
@@ -316,11 +317,17 @@ async function approveInventory(inventoryId, accountId) {
 }
 
 async function deleteClassification(classificationId) {
-  const result = await pool.query(
-    "DELETE FROM public.classification WHERE classification_id = $1 RETURNING *",
-    [classificationId]
-  );
-  return result.rows[0];
+  const query =
+    "DELETE FROM public.classification WHERE classification_id = $1 RETURNING *";
+  const params = [classificationId];
+
+  try {
+    const rows = await executeQuery(query, params);
+    return rows[0]; // Return the deleted row
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
 }
 
 module.exports = {
