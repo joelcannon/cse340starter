@@ -8,8 +8,9 @@ const invCont = {};
  * ************************** */
 invCont.buildByClassificationId = async function (req, res) {
   const { classification_id } = req.params;
-  const data = await invModel.getApprovedInventoryByClassificationId(
-    classification_id
+  const data = await invModel.getInventoryByClassificationId(
+    classification_id,
+    "approved"
   );
   const grid = await utilities.buildClassificationGrid(data);
   const nav = await utilities.getNav();
@@ -197,7 +198,8 @@ invCont.getInventoryJSON = async (req, res, next) => {
   }
 
   const invData = await invModel.getInventoryByClassificationId(
-    classification_id
+    classification_id,
+    "any"
   );
 
   return res.json(invData);

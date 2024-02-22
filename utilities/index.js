@@ -4,8 +4,7 @@ require("dotenv").config();
 
 const Util = {
   getNav: async function () {
-    const rows =
-      await invModel.getApprovedClassificationsWithApprovedInventory();
+    const rows = await invModel.getApprovedClassifications("approved");
     return `<ul>${rows
       .map(
         ({ classification_id, classification_name }) =>
@@ -22,7 +21,7 @@ const Util = {
     if (cApproved === true) {
       rows = await invModel.getClassifications(cApproved);
     } else {
-      rows = await invModel.getApprovedClassificationsWithAnyInventory();
+      rows = await invModel.getApprovedClassifications("any");
     }
     return `<select name='classification_id' id='classification_id' required>
     <option value="">Choose a classification</option>

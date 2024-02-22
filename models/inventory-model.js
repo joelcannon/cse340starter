@@ -1,5 +1,16 @@
 const pool = require("../database/");
 
+// executeQuery function to run queries and catch errors
+async function executeQuery(query, params) {
+  try {
+    const result = await pool.query(query, params);
+    return result.rows;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
 /* ***************************
  *  Get all classification data with the creator name and filtered by approval status
  * ************************** */
@@ -20,8 +31,9 @@ async function getClassifications(cApproved = null) {
 
   query += " ORDER BY c.classification_name"; // alphabetical
 
-  const result = await pool.query(query, params);
-  return result.rows;
+  // const result = await pool.query(query, params);
+  // return result.rows;
+  return executeQuery(query, params);
 }
 
 /* ***************************
@@ -158,87 +170,68 @@ async function checkExistingName(classification_name) {
   }
 }
 
-/* ***************************
- *  Get approved inventory items and classification_name by classification_id
- * ************************** */
-async function getApprovedInventoryByClassificationId(classification_id) {
-  try {
-    const data = await pool.query(
-      `SELECT * FROM public.inventory AS i 
-      JOIN public.classification AS c 
-      ON i.classification_id = c.classification_id 
-      WHERE i.classification_id = $1 AND i.inv_approved = true`,
-      [classification_id]
-    );
-    return data.rows;
-  } catch (error) {
-    console.error(`getApprovedInventoryByClassificationId error ${error}`);
+async function getInventoryByClassificationId(
+  classification_id,
+  approvalStatus
+) {
+  let approvalCondition = "";
+  switch (approvalStatus) {
+    case "approved":
+      approvalCondition = "AND i.inv_approved = true";
+      break;
+    case "any":
+      approvalCondition = "";
+      break;
+    default:
+      throw new Error("Invalid approval status");
   }
+
+  const query = `
+    SELECT * FROM public.inventory AS i 
+    JOIN public.classification AS c 
+    ON i.classification_id = c.classification_id 
+    WHERE i.classification_id = $1 ${approvalCondition}`;
+  const params = [classification_id];
+
+  return await executeQuery(query, params);
 }
 
 /* ***************************
- *  Get all inventory items and classification_name by classification_id
+ *  Get unapproved inventory with account names
  * ************************** */
-async function getInventoryByClassificationId(classification_id) {
-  try {
-    const data = await pool.query(
-      `SELECT * FROM public.inventory AS i 
-      JOIN public.classification AS c 
-      ON i.classification_id = c.classification_id 
-      WHERE i.classification_id = $1`,
-      [classification_id]
-    );
-    return data.rows;
-  } catch (error) {
-    console.error(`getInventoryByClassificationId error ${error}`);
-  }
+async function getUnapprovedInventoryWithAccountNames() {
+  const query = `
+    SELECT 
+      i.*, 
+      COALESCE(a.account_firstname, 'NA') AS account_firstname, 
+      COALESCE(a.account_lastname, '') AS account_lastname,
+      c.classification_name
+    FROM 
+      public.inventory i
+    LEFT JOIN 
+      public.account a ON i.account_id = a.account_id
+    JOIN
+      public.classification c ON i.classification_id = c.classification_id
+    WHERE 
+      i.inv_approved = false
+    ORDER BY 
+      i.inv_id`;
+
+  return await executeQuery(query);
 }
 
 /* ***************************
  *  Get a specific vehicle by inventory id
  * ************************** */
 async function getVehicleById(inv_id) {
-  try {
-    const data = await pool.query(
-      `SELECT * FROM public.inventory WHERE inv_id = $1`,
-      [inv_id]
-    );
-    if (data.rows.length === 0) {
-      throw new Error(`No vehicle found with id ${inv_id}`);
-    }
-    return data.rows[0];
-  } catch (error) {
-    console.error(`getVehicleById error ${error}`);
-  }
-}
+  const query = `SELECT * FROM public.inventory WHERE inv_id = $1`;
+  const params = [inv_id];
 
-/* ***************************
- *  Get all unapproved classification data
- * ************************** */
-async function getUnapprovedClassifications() {
-  const query = `
-    SELECT 
-      c.classification_id, 
-      c.classification_name, 
-      c.classification_approval_date, 
-      a.account_firstname, 
-      a.account_lastname
-    FROM 
-      public.classification c
-    LEFT JOIN 
-      public.account a ON c.account_id = a.account_id
-    WHERE 
-      c.classification_approved = false
-    ORDER BY 
-      c.classification_id`;
-
-  try {
-    const res = await pool.query(query);
-    return res.rows;
-  } catch (err) {
-    console.error(err);
-    throw err;
+  const data = await executeQuery(query, params);
+  if (data.length === 0) {
+    throw new Error(`No vehicle found with id ${inv_id}`);
   }
+  return data[0];
 }
 
 /* ***************************
@@ -263,68 +256,22 @@ async function approveClassification(classificationId, accountId) {
   }
 }
 
-/* ***************************
- *  Get approved classifications linked to at least one inventory
- * ************************** */
-async function getApprovedClassificationsWithApprovedInventory() {
-  const query = `
-  SELECT 
-  c.classification_id, 
-  c.classification_name, 
-  c.classification_approval_date
-FROM 
-  public.classification c
-WHERE 
-  c.classification_approved = true AND
-  EXISTS (
-    SELECT 1 FROM public.inventory i
-    WHERE i.classification_id = c.classification_id AND i.inv_approved = true
-  )
-ORDER BY 
-  c.classification_name`;
-
-  try {
-    const res = await pool.query(query);
-    return res.rows;
-  } catch (err) {
-    console.error(err);
-    throw err;
+async function getApprovedClassifications(inventoryApprovalStatus) {
+  let subQuery = "";
+  switch (inventoryApprovalStatus) {
+    case "approved":
+      subQuery = "AND i.inv_approved = true";
+      break;
+    case "unapproved":
+      subQuery = "AND i.inv_approved = false";
+      break;
+    case "any":
+      subQuery = "";
+      break;
+    default:
+      throw new Error("Invalid inventory approval status");
   }
-}
 
-/* ***************************
- *  Get approved classifications linked to at least one inventory
- * ************************** */
-async function getApprovedClassificationsWithAnyInventory() {
-  const query = `
-  SELECT 
-  c.classification_id, 
-  c.classification_name, 
-  c.classification_approval_date
-FROM 
-  public.classification c
-WHERE 
-  c.classification_approved = true AND
-  EXISTS (
-    SELECT 1 FROM public.inventory i
-    WHERE i.classification_id = c.classification_id
-  )
-ORDER BY 
-  c.classification_name`;
-
-  try {
-    const res = await pool.query(query);
-    return res.rows;
-  } catch (err) {
-    console.error(err);
-    throw err;
-  }
-}
-
-/* ***************************
- *  Get approved classifications linked to at least one unapproved inventory
- * ************************** */
-async function getApprovedClassificationsWithUnapprovedInventory() {
   const query = `
     SELECT 
       c.classification_id, 
@@ -336,49 +283,12 @@ async function getApprovedClassificationsWithUnapprovedInventory() {
       c.classification_approved = true AND
       EXISTS (
         SELECT 1 FROM public.inventory i
-        WHERE i.classification_id = c.classification_id AND
-              i.inv_approved = false
+        WHERE i.classification_id = c.classification_id ${subQuery}
       )
     ORDER BY 
       c.classification_name`;
 
-  try {
-    const res = await pool.query(query);
-    return res.rows;
-  } catch (err) {
-    console.error(err);
-    throw err;
-  }
-}
-
-/* ***************************
- *  Get unapproved inventory with account names
- * ************************** */
-async function getUnapprovedInventoryWithAccountNames() {
-  const query = `
-  SELECT 
-    i.*, 
-    COALESCE(a.account_firstname, 'NA') AS account_firstname, 
-    COALESCE(a.account_lastname, '') AS account_lastname,
-    c.classification_name
-  FROM 
-    public.inventory i
-  LEFT JOIN 
-    public.account a ON i.account_id = a.account_id
-   JOIN
-    public.classification c ON i.classification_id = c.classification_id
-  WHERE 
-    i.inv_approved = false
-  ORDER BY 
-    i.inv_id`;
-
-  try {
-    const res = await pool.query(query);
-    return res.rows;
-  } catch (err) {
-    console.error(err);
-    throw err;
-  }
+  return await executeQuery(query);
 }
 
 /* ***************************
@@ -415,21 +325,19 @@ async function deleteClassification(classificationId) {
 
 module.exports = {
   getClassifications,
-  getApprovedInventoryByClassificationId,
+  getApprovedClassifications,
   getInventoryByClassificationId,
+  getUnapprovedInventoryWithAccountNames,
+
   getVehicleById,
-  addNewClassification,
   checkExistingName,
+
   addNewInventory,
   updateInventory,
+  approveInventory,
   deleteInventory,
 
-  getUnapprovedClassifications,
+  addNewClassification,
   approveClassification,
-  getApprovedClassificationsWithApprovedInventory,
-  getApprovedClassificationsWithUnapprovedInventory,
-  getApprovedClassificationsWithAnyInventory,
-  getUnapprovedInventoryWithAccountNames,
-  approveInventory,
   deleteClassification,
 };
