@@ -9,8 +9,8 @@
 
    <%- detail %>
    
-<div>
-  <button onclick="window.location.href='/inv/approve-inventory/<%= inv_id %>'">Approve</button>
-  <button onclick="window.location.href='/inv/approve-changes'">Cancel</button>
-  <button onclick="window.location.href='/inv/reject-inventory/<%= inv_id %>'">Reject</button>
-</div>
+   <div>
+    <button class="approve-btn" onclick="window.location.href='/inv/approve-inventory/<%= inv_id %>'">Approve</button>
+    <button class="cancel-btn" onclick="window.location.href='/inv/approve-changes'">Cancel</button>
+    <button class="reject-btn" onclick="window.location.href='/inv/reject-inventory/<%= inv_id %>'">Reject</button>
+  </div>

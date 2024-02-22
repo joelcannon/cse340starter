@@ -23,23 +23,23 @@ h6 {
 }
 
 h1 {
-  font-size: 2.5rem;
-}
-
-h2 {
   font-size: 2rem;
 }
 
-h3 {
+h2 {
   font-size: 1.75rem;
 }
 
-h4 {
+h3 {
   font-size: 1.5rem;
 }
 
-h5 {
+h4 {
   font-size: 1.25rem;
+}
+
+h5 {
+  font-size: 1.1rem;
 }
 
 h6 {
@@ -425,50 +425,6 @@ li::marker {
   color: red;
 }
 
-/* body {
-  font-family: Arial, sans-serif;
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-} */
-/* 
-.car-details {
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
-}
-
-.car-details img {
-  width: 100%;
-  height: auto;
-}
-
-.car-info {
-  flex-grow: 0;
-  padding: 20px;
-}
-
-.price,
-.miles,
-.color {
-  font-size: 1.2em;
-  font-weight: bold;
-}
-
-@media (min-width: 601px) {
-  .car-details img,
-  .car-info {
-    flex: 0 0 50%;
-  }
-}
-
-@media (max-width: 600px) {
-  .car-details {
-    flex-direction: column;
-  }
-} */
 .car-details {
   display: flex;
   flex-wrap: wrap;
@@ -515,43 +471,6 @@ li::marker {
     max-width: none; /* Reset the max-width for smaller screens */
   }
 }
-
-/* .login,
-.register {
-  width: 300px;
-  padding: 16px;
-  background-color: white;
-  margin: 0 auto;
-  margin-top: 50px;
-  border: 1px solid black;
-  border-radius: 4px;
-}
-.login input[type="email"],
-.login input[type="password"],
-.login input[type="text"],
-.register input[type="email"],
-.register input[type="password"],
-.register input[type="text"] {
-  width: 100%;
-  padding: 15px;
-  margin: 5px 0 10px 0;
-  border: none;
-  background: #f1f1f1;
-}
-
-.login input[type="submit"],
-.register input[type="submit"] {
-  background-color: #4caf50;
-  color: white;
-  padding: 14px 20px;
-  margin: 8px 0;
-  border: none;
-  cursor: pointer;
-  width: 100%;
-}
-.login a {
-  color: dodgerblue;
-} */
 
 .login,
 .register {
@@ -684,14 +603,6 @@ input:required:valid + .valid-icon {
   width: 100%;
 }
 
-/* .input-wrapper select {
-  width: 100%;
-  padding: 10px;
-  font-size: 16px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-} */
-
 .input-wrapper .valid-icon {
   position: absolute;
   right: 10px;
@@ -699,4 +610,19 @@ input:required:valid + .valid-icon {
   transform: translateY(-50%);
   color: green;
   display: none;
+}
+
+.approve-btn {
+  background-color: green;
+  color: white;
+}
+
+.cancel-btn {
+  background-color: yellow;
+  color: black;
+}
+
+.reject-btn {
+  background-color: red;
+  color: white;
 }

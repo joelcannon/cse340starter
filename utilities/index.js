@@ -206,8 +206,8 @@ const Util = {
           <tr id="row-${classification_id}">
             <td>${classification_name}</td>
             <td>${accountFullName}</td>
-            <td><button onclick="approveClassification(${classification_id})">Approve</button></td>
-            <td><button onclick="rejectClassification(${classification_id})">Reject</button></td>
+            <td><button class="approve-btn" onclick="approveClassification(${classification_id})">Approve</button></td>
+            <td><button class="reject-btn" onclick="rejectClassification(${classification_id})">Reject</button></td>
           </tr>
         `;
         }
