@@ -76,7 +76,6 @@ invCont.addNewClassification = async function (req, res) {
   const { classification_name } = req.body;
 
   const account_id = res.locals.accountData.account_id;
-  console.log("account_id", account_id);
 
   const regResult = await invModel.addNewClassification(
     classification_name,
@@ -139,7 +138,6 @@ invCont.addNewInventory = async function (req, res) {
   const inventoryData = req.body;
 
   const account_id = res.locals.accountData.account_id;
-  console.log("account_id", account_id);
 
   const regResult = await invModel.addNewInventory(
     inventoryData.inv_make,
@@ -242,8 +240,6 @@ invCont.deleteInventoryView = async function (req, res) {
   const nav = await utilities.getNav();
   const itemData = await invModel.getVehicleById(inv_id);
 
-  console.warn("inside controller.deleteInventoryView", itemData);
-
   if (!itemData) {
     // Handle the error: return an error response or render a different view
     return res.status(404).send("Vehicle not found");
@@ -269,7 +265,6 @@ invCont.updateInventory = async function (req, res) {
   const inventoryData = req.body;
 
   const account_id = res.locals.accountData.account_id;
-  console.log("account_id", account_id);
 
   const updateResult = await invModel.updateInventory(
     inventoryData.inv_id,
@@ -316,8 +311,6 @@ invCont.deleteInventory = async function (req, res) {
   const inventoryData = req.body;
   const deleteResult = await invModel.deleteInventory(inventoryData.inv_id);
 
-  console.warn("inside controller.deleteInventory", deleteResult);
-
   if (deleteResult) {
     const itemName = `${deleteResult.inv_make} ${deleteResult.inv_model}`;
     req.flash("notice", `The ${itemName} was successfully deleted.`);
@@ -361,7 +354,6 @@ invCont.approveClassification = async (req, res, next) => {
   }
 
   const account_id = res.locals.accountData.account_id;
-  console.log("account_id", account_id);
   const classificationData = await invModel.approveClassification(
     classification_id,
     account_id
@@ -421,9 +413,7 @@ invCont.approveInventory = async (req, res, next) => {
   }
 
   const account_id = res.locals.accountData.account_id;
-  console.log("account_id", account_id);
   const inventoryData = await invModel.approveInventory(inv_id, account_id);
-  console.log(inventoryData);
   const itemName = `${inventoryData.inv_make} ${inventoryData.inv_model}`;
   req.flash("notice", `The ${itemName} was successfully approved.`);
   return res.redirect("/inv/approve-changes");
@@ -439,7 +429,6 @@ invCont.rejectInventory = async (req, res, next) => {
   }
 
   const inventoryData = await invModel.deleteInventory(inv_id);
-  console.log(inventoryData);
   const itemName = `${inventoryData.inv_make} ${inventoryData.inv_model}`;
   req.flash("notice", `The ${itemName} was successfully rejected and deleted.`);
   return res.redirect("/inv/approve-changes");
